@@ -145,7 +145,7 @@ class SettingsScreen extends StatelessWidget {
                   // ignore: use_build_context_synchronously
                   Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
                     builder: (context) {
-                      return const SplashScreen();
+                      return  SplashScreen();
                     },
                   ), (route) => false);
                 },

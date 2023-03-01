@@ -1,3 +1,4 @@
+import 'package:beatabox/provider/onboarding_provider/onboarding.dart';
 import 'package:beatabox/screens/mini_screens/splash_screen.dart';
 import 'package:beatabox/model/fav_model.dart';
 import 'package:beatabox/provider/songmodel_provider.dart';
@@ -22,10 +23,9 @@ Future<void> main() async {
     androidNotificationOngoing: true,
   );
 
-  runApp(ChangeNotifierProvider(
-    create: (context) => SongModelProvider(),
-    child: const MyApp(),
-  ));
+  runApp(
+    const MyApp(),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -33,17 +33,23 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'BeatBox Music Player',
-      theme: ThemeData(
-        elevatedButtonTheme: ElevatedButtonThemeData(
-            style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all<Color>(
-                    const Color.fromARGB(255, 70, 40, 114)))),
-        primarySwatch: Colors.blue,
+    return MultiProvider(
+      providers: [
+        ListenableProvider(create:(context) => SongModelProvider(), ),
+        ListenableProvider(create: (context) =>OnBoardingProvider(),)
+      ],
+      child: MaterialApp(
+        title: 'BeatBox Music Player',
+        theme: ThemeData(
+          elevatedButtonTheme: ElevatedButtonThemeData(
+              style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all<Color>(
+                      const Color.fromARGB(255, 70, 40, 114)))),
+          primarySwatch: Colors.blue,
+        ),
+        home:  SplashScreen(),
+        debugShowCheckedModeBanner: false,
       ),
-      home: const SplashScreen(),
-      debugShowCheckedModeBanner: false,
     );
   }
 }

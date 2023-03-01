@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:on_audio_query/on_audio_query.dart';
-import 'package:permission_handler/permission_handler.dart';
+
 
 import 'package:provider/provider.dart';
 
@@ -47,7 +47,6 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     GetAllSongController.audioPlayer.currentIndexStream.listen((index) {});
     super.initState();
-    reqeustStoragePermission();
   }
 
   @override
@@ -414,9 +413,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Future<void> reqeustStoragePermission() async {
-    Permission.storage.request();
-  }
+ 
 
   Future<bool> _onButtonPressed(BuildContext context) async {
     bool? exitApp = await showDialog(

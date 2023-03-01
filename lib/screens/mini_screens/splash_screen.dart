@@ -5,26 +5,19 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../main_screens/bottom_nav.dart';
 import 'onboarding/onboarding_screen.dart';
 
-class SplashScreen extends StatefulWidget {
-  const SplashScreen({super.key});
+class SplashScreen extends StatelessWidget {
+   SplashScreen({super.key});
 
-  @override
-  State<SplashScreen> createState() => _SplashScreenState();
-}
-
-class _SplashScreenState extends State<SplashScreen> {
   late SharedPreferences sharedPreferences;
 
   dynamic savedValue;
-  @override
-  void initState() {
-    gotoHome();
-    getDataFromSharedPreference();
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      gotoHome(context);
+      getDataFromSharedPreference();
+    });
     getDataFromSharedPreference();
     return Container(
       decoration: const BoxDecoration(
@@ -66,13 +59,13 @@ class _SplashScreenState extends State<SplashScreen> {
     );
   }
 
-  Future<void> gotoHome() async {
+  Future<void> gotoHome(context) async {
     await Future.delayed(const Duration(seconds: 3));
     if (savedValue == null) {
       // ignore: use_build_context_synchronously
       Navigator.pushAndRemoveUntil(context,
           MaterialPageRoute(builder: (context) {
-        return const OnBoardingScreen();
+        return OnBoardingScreen();
       }), (route) => false);
     } else {
       // ignore: use_build_context_synchronously
