@@ -1,3 +1,4 @@
+import 'package:beatabox/provider/home_page_provider/search_provider.dart';
 import 'package:beatabox/screens/mini_screens/now_playing_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
@@ -17,36 +18,19 @@ class SearchScreen extends StatefulWidget {
 }
 
 List<SongModel> allsongs = [];
-List<SongModel> foundSongs = [];
 final audioPlayer = AudioPlayer();
 final audioQuery = OnAudioQuery();
+
 
 @override
 class _SearchScreenState extends State<SearchScreen> {
   @override
-  void initState() {
-    songsLoading();
-    super.initState();
-  }
-
-  void updateList(String enteredText) {
-    List<SongModel> results = [];
-    if (enteredText.isEmpty) {
-      results = allsongs;
-    } else {
-      results = allsongs
-          .where((element) => element.displayNameWOExt
-              .toLowerCase()
-              .contains(enteredText.toLowerCase()))
-          .toList();
-    }
-    setState(() {
-      foundSongs = results;
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
+var searchProvider = Provider.of<SearchProvider>(context);
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      songsLoading(searchProvider);
+      
+    });
     return Container(
       decoration: const BoxDecoration(
           gradient: LinearGradient(colors: [
@@ -65,33 +49,30 @@ class _SearchScreenState extends State<SearchScreen> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: TextField(
-                      onChanged: (value) => updateList(value),
-                      style: const TextStyle(color: Colors.white),
-                      decoration: InputDecoration(
-                          filled: true,
-                          fillColor: const Color(0xff302360),
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20),
-                              borderSide: BorderSide.none),
-                          hintText: 'Search Song',
-                          hintStyle: const TextStyle(color: Colors.white),
-                          prefixIcon: const Icon(
-                            Icons.search,
-                            color: Colors.white,
-                          ),
-                          prefixIconColor: Colors.white),
+                    child: Consumer<SearchProvider>(
+                      builder: (context, values, child) => TextField(
+                        onChanged: (value) => values.updateList(value),
+                        style: const TextStyle(color: Colors.white),
+                        decoration: InputDecoration(
+                            filled: true,
+                            fillColor: const Color(0xff302360),
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(20),
+                                borderSide: BorderSide.none),
+                            hintText: 'Search Song',
+                            hintStyle: const TextStyle(color: Colors.white),
+                            prefixIcon: const Icon(
+                              Icons.search,
+                              color: Colors.white,
+                            ),
+                            prefixIconColor: Colors.white),
+                      ),
                     ),
                   ),
                   const SizedBox(
                     height: 5,
                   ),
-                  // const Text(
-                  //   '   Results',
-                  //   style:
-                  //       TextStyle(color: Colors.white, fontFamily: 'poppins'),
-                  // ),
-                  foundSongs.isNotEmpty
+                  searchProvider.foundSongs.isNotEmpty
                       ? Expanded(
                           child: ListView.builder(
                           itemBuilder: ((context, index) {
@@ -109,7 +90,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                   iconColor: Colors.white,
                                   selectedColor: Colors.purpleAccent,
                                   leading: QueryArtworkWidget(
-                                      id: foundSongs[index].id,
+                                      id: searchProvider.foundSongs[index].id,
                                       type: ArtworkType.AUDIO,
                                       nullArtworkWidget: const CircleAvatar(
                                           backgroundColor: Colors.transparent,
@@ -117,39 +98,39 @@ class _SearchScreenState extends State<SearchScreen> {
                                           backgroundImage: AssetImage(
                                               'assets/home_screen/Premium_Photo___Headphones_on_dark_black_background-removebg-preview.png'))),
                                   title: Text(
-                                    foundSongs[index].displayNameWOExt,
+                                    searchProvider.foundSongs[index].displayNameWOExt,
                                     style: const TextStyle(
                                         overflow: TextOverflow.ellipsis,
                                         fontFamily: 'poppins',
                                         color: Colors.white),
                                   ),
                                   subtitle: Text(
-                                    foundSongs[index].artist.toString() ==
+                                    searchProvider.foundSongs[index].artist.toString() ==
                                             "<unknown>"
                                         ? "Unknown Artist"
-                                        : foundSongs[index].artist.toString(),
+                                        : searchProvider.foundSongs[index].artist.toString(),
                                     style: const TextStyle(
                                         fontFamily: 'poppins',
                                         fontSize: 12,
                                         color: Colors.blueGrey),
                                   ),
                                   trailing: FavButMusicPlaying(
-                                    songFavoriteMusicPlaying: foundSongs[index],
+                                    songFavoriteMusicPlaying: searchProvider.foundSongs[index],
                                   ),
                                   onTap: () {
                                     GetAllSongController.audioPlayer
                                         .setAudioSource(
                                             GetAllSongController.createSongList(
-                                                foundSongs),
+                                                searchProvider.foundSongs),
                                             initialIndex: index);
                                     GetAllSongController.audioPlayer.play();
                                     context
                                         .read<SongModelProvider>()
-                                        .setId(foundSongs[index].id);
+                                        .setId(searchProvider.foundSongs[index].id);
                                     Navigator.push(context,
                                         MaterialPageRoute(builder: (context) {
                                       return NowPlayingScreen(
-                                        songModelList: foundSongs,
+                                        songModelList: searchProvider.foundSongs,
                                       );
                                     }));
                                   },
@@ -157,7 +138,7 @@ class _SearchScreenState extends State<SearchScreen> {
                               ),
                             );
                           }),
-                          itemCount: foundSongs.length,
+                          itemCount: searchProvider.foundSongs.length,
                         ))
                       : Center(
                           child: Lottie.asset(
@@ -170,13 +151,13 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 
-  void songsLoading() async {
+  void songsLoading(searchProvider) async {
     allsongs = await audioQuery.querySongs(
       sortType: null,
       orderType: OrderType.ASC_OR_SMALLER,
       uriType: UriType.EXTERNAL,
       ignoreCase: true,
     );
-    foundSongs = allsongs;
+    searchProvider.foundSongs = allsongs;
   }
 }

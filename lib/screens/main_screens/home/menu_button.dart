@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:lottie/lottie.dart';
@@ -10,25 +9,13 @@ import '../../../database/playlist_db.dart';
 import '../../../model/fav_model.dart';
 import '../playlist/playlist_screen.dart';
 
-class FavOrPlayMenuButton extends StatefulWidget {
+class FavOrPlayMenuButton extends StatelessWidget {
   const FavOrPlayMenuButton(
       {super.key, required this.songFavorite, this.findex});
   final SongModel songFavorite;
-  
+
   final dynamic findex;
-  
-  
-  @override
-  State<FavOrPlayMenuButton> createState() => _FavOrPlayMenuButtonState();
-}
 
-final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
-
-class _FavOrPlayMenuButtonState extends State<FavOrPlayMenuButton> {
-  
-  
-  
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder(
@@ -42,7 +29,7 @@ class _FavOrPlayMenuButtonState extends State<FavOrPlayMenuButton> {
           itemBuilder: (context) => [
             PopupMenuItem(
               child: Text(
-                  FavoriteDb.isFavor(widget.songFavorite)
+                  FavoriteDb.isFavor(songFavorite)
                       ? 'Remove from favourites'
                       : 'Add to favourite',
                   style: const TextStyle(
@@ -50,8 +37,8 @@ class _FavOrPlayMenuButtonState extends State<FavOrPlayMenuButton> {
                       fontFamily: 'poppins',
                       fontSize: 13)),
               onTap: () {
-                if (FavoriteDb.isFavor(widget.songFavorite)) {
-                  FavoriteDb.delete(widget.songFavorite.id);
+                if (FavoriteDb.isFavor(songFavorite)) {
+                  FavoriteDb.delete(songFavorite.id);
                   const snackBar = SnackBar(
                     content: Text('Removed From Favorite'),
                     duration: Duration(seconds: 1),
@@ -59,7 +46,7 @@ class _FavOrPlayMenuButtonState extends State<FavOrPlayMenuButton> {
                   );
                   ScaffoldMessenger.of(context).showSnackBar(snackBar);
                 } else {
-                  FavoriteDb.add(widget.songFavorite);
+                  FavoriteDb.add(songFavorite);
                   const snackBar = SnackBar(
                     content: Text('Song Added to Favorite'),
                     duration: Duration(seconds: 1),
@@ -80,7 +67,7 @@ class _FavOrPlayMenuButtonState extends State<FavOrPlayMenuButton> {
           ],
           onSelected: (value) {
             if (value == 2) {
-              showPlaylistdialog(context,widget.songFavorite,widget.findex);
+              showPlaylistdialog(context, songFavorite, findex);
             }
           },
           color: const Color.fromARGB(255, 37, 5, 92),
@@ -90,7 +77,7 @@ class _FavOrPlayMenuButtonState extends State<FavOrPlayMenuButton> {
     );
   }
 
-  showPlaylistdialog(context,song,index) {
+  showPlaylistdialog(context, song, index) {
     showDialog(
         context: context,
         builder: (_) {
@@ -120,7 +107,7 @@ class _FavOrPlayMenuButtonState extends State<FavOrPlayMenuButton> {
                                 ),
                                 const Positioned(
                                   right: 30,
-                                  left: 30,
+                                  left: 40,
                                   bottom: 50,
                                   child: Text('No Playlist found!',
                                       style: TextStyle(
@@ -157,9 +144,7 @@ class _FavOrPlayMenuButtonState extends State<FavOrPlayMenuButton> {
                                   ),
                                   onTap: () {
                                     songAddToPlaylist(
-                                      widget.songFavorite,
-                                        data,
-                                        data.name);
+                                        songFavorite, data, data.name,context);
                                     Navigator.pop(context);
                                   },
                                 ),
@@ -192,7 +177,7 @@ class _FavOrPlayMenuButtonState extends State<FavOrPlayMenuButton> {
         });
   }
 
-  void songAddToPlaylist(SongModel data, datas, String name) {
+  void songAddToPlaylist(SongModel data, datas, String name,context) {
     if (!datas.isValueIn(data.id)) {
       datas.add(data.id);
       final snackbar1 = SnackBar(
@@ -240,7 +225,7 @@ class _FavOrPlayMenuButtonState extends State<FavOrPlayMenuButton> {
             child: Form(
               key: formKey,
               child: TextFormField(
-                textAlign: TextAlign.center,
+                textAlign: TextAlign.left,
                 controller: nameController,
                 maxLength: 15,
                 decoration: InputDecoration(
@@ -322,7 +307,7 @@ class _FavOrPlayMenuButtonState extends State<FavOrPlayMenuButton> {
           backgroundColor: Colors.black,
           content: Text(
             'playlist already exist',
-            style: TextStyle(color: Colors.redAccent),
+            style: TextStyle(color: Colors.red),
           ));
       ScaffoldMessenger.of(context).showSnackBar(snackbar3);
       Navigator.of(context).pop();
@@ -341,3 +326,5 @@ class _FavOrPlayMenuButtonState extends State<FavOrPlayMenuButton> {
     }
   }
 }
+
+final GlobalKey<FormState> _formKey = GlobalKey<FormState>();

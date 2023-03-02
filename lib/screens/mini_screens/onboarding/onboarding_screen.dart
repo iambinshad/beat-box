@@ -9,15 +9,11 @@ import 'onboarding_pages/intro_page1.dart';
 import 'onboarding_pages/intro_page2.dart';
 import 'onboarding_pages/intro_page3.dart';
 
-class OnBoardingScreen extends StatefulWidget {
-  const OnBoardingScreen({super.key});
+class OnBoardingScreen extends StatelessWidget {
+   OnBoardingScreen({super.key});
 
-  @override
-  State<OnBoardingScreen> createState() => _OnBoardingScreenState();
-}
-
-class _OnBoardingScreenState extends State<OnBoardingScreen> {
   int? enter = 0;
+
   final PageController _controller = PageController();
 
   @override

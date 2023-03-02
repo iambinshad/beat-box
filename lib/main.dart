@@ -1,3 +1,5 @@
+import 'package:beatabox/provider/home_page_provider/home_provider.dart';
+import 'package:beatabox/provider/home_page_provider/search_provider.dart';
 import 'package:beatabox/provider/onboarding_provider/onboarding.dart';
 import 'package:beatabox/screens/mini_screens/splash_screen.dart';
 import 'package:beatabox/model/fav_model.dart';
@@ -36,7 +38,10 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ListenableProvider(create:(context) => SongModelProvider(), ),
-        ListenableProvider(create: (context) =>OnBoardingProvider(),)
+        ListenableProvider(create: (context) =>OnBoardingProvider(),),
+        ListenableProvider(create:(context) => HomePageProvider(), ),
+        
+        ListenableProvider(create: (context) => SearchProvider(),),
       ],
       child: MaterialApp(
         title: 'BeatBox Music Player',

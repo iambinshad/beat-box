@@ -1,12 +1,12 @@
 import 'dart:developer';
 
+import 'package:beatabox/provider/home_page_provider/home_provider.dart';
 import 'package:beatabox/screens/main_screens/home/search_screen.dart';
 import 'package:beatabox/screens/mini_screens/now_playing_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:on_audio_query/on_audio_query.dart';
-
 
 import 'package:provider/provider.dart';
 
@@ -29,10 +29,6 @@ class _HomeScreenState extends State<HomeScreen> {
   final AudioPlayer _audioPlayer = AudioPlayer();
 
   List<SongModel> allSongs = [];
-  bool isGridveiw = true;
-  dynamic lastView = true;
-  bool isFavourite = false;
-  dynamic ispermissionget;
 
   void playSong(String? uri) {
     try {
@@ -69,16 +65,15 @@ class _HomeScreenState extends State<HomeScreen> {
             appBar: AppBar(
               leading: Padding(
                 padding: const EdgeInsets.only(left: 20),
-                child: IconButton(
-                    onPressed: () {
-                      setState(() {
-                        isGridveiw = !isGridveiw;
-                        lastView = isGridveiw;
-                      });
-                    },
-                    icon: Icon(isGridveiw
-                        ? Icons.grid_view_rounded
-                        : Icons.list_rounded)),
+                child: Consumer<HomePageProvider>(
+                  builder: (context, value, child) => IconButton(
+                      onPressed: () {
+                        value.viewtype();
+                      },
+                      icon: Icon(value.isGridveiw
+                          ? Icons.grid_view_rounded
+                          : Icons.list_rounded)),
+                ),
               ),
               actions: [
                 Padding(
@@ -170,7 +165,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                 GetAllSongController.songscopy =
                                     items.data!; //for playlist
 
-                                return isGridveiw
+                                return Provider.of<HomePageProvider>(context)
+                                        .isGridveiw
                                     ? ListView.builder(
                                         itemBuilder: ((context, index) {
                                           allSongs.addAll(items.data!);
@@ -412,8 +408,6 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
-
- 
 
   Future<bool> _onButtonPressed(BuildContext context) async {
     bool? exitApp = await showDialog(
