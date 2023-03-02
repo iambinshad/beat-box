@@ -17,65 +17,58 @@ class OnBoardingScreen extends StatefulWidget {
 }
 
 class _OnBoardingScreenState extends State<OnBoardingScreen> {
-   bool skipbutton = false;
-  bool onLastPage = false;
-  bool getStarted = false;
   int? enter = 0;
   final PageController _controller = PageController();
- 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
         child: Stack(
           children: [
-            Consumer<OnBoardingProvider>(builder: (context, value, child) {
-              return PageView(
-              controller: _controller,
-              onPageChanged: (index) {
-               
-                  setState(() {
-                    onLastPage = (index == 2);
-                  skipbutton = (index == 2);
-                  getStarted = (index == 2);
-                  });
-                
+            Consumer<OnBoardingProvider>(
+              builder: (context, value, child) {
+                return PageView(
+                  controller: _controller,
+                  onPageChanged: (index) {
+                    value.isLastPage(index);
+                  },
+                  children: const [
+                    IntroPage1(),
+                    IntroPage2(),
+                    IntroPage3(),
+                  ],
+                );
               },
-              children: const [
-                IntroPage1(),
-                IntroPage2(),
-                IntroPage3(),
-              ],
-            );
-            },),
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: skipbutton
-                      ? null
-                      : Container(
-                          height: 25,
-                          width: 50,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: const Color.fromARGB(255, 117, 88, 210)),
-                          child: Center(
-                              child: GestureDetector(
-                            onTap: () {
-                              _controller.jumpToPage(2);
-                            },
-                            child: const Text(
-                              'skip',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          )),
-                        ),
-                )
+               Padding(
+                    padding: const EdgeInsets.all(15.0),
+                    child: Provider.of<OnBoardingProvider>(context).skipbutton
+                        ? null
+                        : Container(
+                            height: 25,
+                            width: 50,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: const Color.fromARGB(255, 117, 88, 210)),
+                            child: Center(
+                                child: GestureDetector(
+                              onTap: () {
+                                _controller.jumpToPage(2);
+                              },
+                              child: const Text(
+                                'skip',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            )),
+                          ),
+                  ),
               ],
             ),
-            getStarted
+            Provider.of<OnBoardingProvider>(context).getStarted
                 ? Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -90,7 +83,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                                   onTap: () {
                                     value.entryCounting();
                                     reqeustStoragePermission();
-                                    
+
                                     Navigator.pushAndRemoveUntil(context,
                                         MaterialPageRoute(builder: (context) {
                                       return const BottomNavScreen();
@@ -135,7 +128,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                   ),
                   Padding(
                     padding: const EdgeInsets.only(right: 25),
-                    child: onLastPage
+                    child: Provider.of<OnBoardingProvider>(context).onLastPage
                         ? GestureDetector(
                             onTap: () {
                               Navigator.pushAndRemoveUntil(context,
