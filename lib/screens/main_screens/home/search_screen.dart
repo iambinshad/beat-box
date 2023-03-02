@@ -10,20 +10,9 @@ import '../../../controller/get_all_song_controller.dart';
 import '../../../provider/songmodel_provider.dart';
 import '../favorites/favorite_notifying.dart';
 
-class SearchScreen extends StatefulWidget {
+class SearchScreen extends StatelessWidget {
   const SearchScreen({super.key});
 
-  @override
-  State<SearchScreen> createState() => _SearchScreenState();
-}
-
-List<SongModel> allsongs = [];
-final audioPlayer = AudioPlayer();
-final audioQuery = OnAudioQuery();
-
-
-@override
-class _SearchScreenState extends State<SearchScreen> {
   @override
   Widget build(BuildContext context) {
 var searchProvider = Provider.of<SearchProvider>(context);
@@ -161,3 +150,7 @@ var searchProvider = Provider.of<SearchProvider>(context);
     searchProvider.foundSongs = allsongs;
   }
 }
+
+List<SongModel> allsongs = [];
+final audioPlayer = AudioPlayer();
+final audioQuery = OnAudioQuery();

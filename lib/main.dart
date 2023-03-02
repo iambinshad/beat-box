@@ -1,3 +1,4 @@
+import 'package:beatabox/provider/bottom_nav_provider/bottom_nav_provider.dart';
 import 'package:beatabox/provider/home_page_provider/home_provider.dart';
 import 'package:beatabox/provider/home_page_provider/search_provider.dart';
 import 'package:beatabox/provider/onboarding_provider/onboarding.dart';
@@ -40,7 +41,7 @@ class MyApp extends StatelessWidget {
         ListenableProvider(create:(context) => SongModelProvider(), ),
         ListenableProvider(create: (context) =>OnBoardingProvider(),),
         ListenableProvider(create:(context) => HomePageProvider(), ),
-        
+        ListenableProvider(create: (context) => BottomNavProv(),),
         ListenableProvider(create: (context) => SearchProvider(),),
       ],
       child: MaterialApp(
