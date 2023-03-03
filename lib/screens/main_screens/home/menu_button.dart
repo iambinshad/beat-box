@@ -3,6 +3,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:lottie/lottie.dart';
 
 import 'package:on_audio_query/on_audio_query.dart';
+import 'package:provider/provider.dart';
 
 import '../../../database/fav_db.dart';
 import '../../../database/playlist_db.dart';
@@ -18,9 +19,9 @@ class FavOrPlayMenuButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder(
-      valueListenable: FavoriteDb.favoriteSongs,
-      builder: (BuildContext ctx, List<SongModel> favoriteData, Widget? child) {
+    return Consumer<FavoriteDb>(
+      
+      builder: (context, value, child) {
         return PopupMenuButton(
           icon: const Icon(
             Icons.more_vert_outlined,
@@ -29,7 +30,7 @@ class FavOrPlayMenuButton extends StatelessWidget {
           itemBuilder: (context) => [
             PopupMenuItem(
               child: Text(
-                  FavoriteDb.isFavor(songFavorite)
+                  value.isFavor(songFavorite)
                       ? 'Remove from favourites'
                       : 'Add to favourite',
                   style: const TextStyle(
@@ -37,8 +38,8 @@ class FavOrPlayMenuButton extends StatelessWidget {
                       fontFamily: 'poppins',
                       fontSize: 13)),
               onTap: () {
-                if (FavoriteDb.isFavor(songFavorite)) {
-                  FavoriteDb.delete(songFavorite.id);
+                if (value.isFavor(songFavorite)) {
+                  value.delete(songFavorite.id);
                   const snackBar = SnackBar(
                     content: Text('Removed From Favorite'),
                     duration: Duration(seconds: 1),
@@ -46,7 +47,7 @@ class FavOrPlayMenuButton extends StatelessWidget {
                   );
                   ScaffoldMessenger.of(context).showSnackBar(snackBar);
                 } else {
-                  FavoriteDb.add(songFavorite);
+                  value.add(songFavorite);
                   const snackBar = SnackBar(
                     content: Text('Song Added to Favorite'),
                     duration: Duration(seconds: 1),
@@ -54,7 +55,7 @@ class FavOrPlayMenuButton extends StatelessWidget {
                   );
                   ScaffoldMessenger.of(context).showSnackBar(snackBar);
                 }
-                FavoriteDb.favoriteSongs.notifyListeners();
+               
               },
             ),
             const PopupMenuItem(

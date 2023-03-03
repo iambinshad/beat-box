@@ -11,13 +11,13 @@ import 'home/home_screen.dart';
 import 'settings/settings_screen.dart';
 
 class BottomNavScreen extends StatelessWidget {
-  const BottomNavScreen({super.key});
+   BottomNavScreen({super.key});
 
-  final pages = const [
+  final pages =  [
     HomeScreen(),
-    FavouriteScreen(),
-    PlaylistScreen(),
-    SettingsScreen(),
+    const FavouriteScreen(),
+    const PlaylistScreen(),
+    const SettingsScreen(),
   ];
 
   @override

@@ -3,6 +3,7 @@ import 'package:beatabox/screens/main_screens/settings/terms_and_cod.dart';
 import 'package:beatabox/screens/mini_screens/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../database/fav_db.dart';
@@ -136,8 +137,8 @@ class SettingsScreen extends StatelessWidget {
                   final sharedprifes = await SharedPreferences.getInstance();
                   sharedprifes.clear();
 
-                  final musicDb = Hive.openBox<FavModel>('FavoriteDB');
-                  FavoriteDb.clear();
+                  // final musicDb = Hive.openBox<FavModel>('FavoriteDB');
+                  Provider.of<FavoriteDb>(context).clear();
 
                   final playlistDb = Hive.box<FavModel>('playlistDb');
                   playlistDb.clear();

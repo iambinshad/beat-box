@@ -15,17 +15,11 @@ import '../../../database/fav_db.dart';
 import '../../../provider/songmodel_provider.dart';
 import 'menu_button.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+class HomeScreen extends StatelessWidget {
+   HomeScreen({super.key});
 
-  @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-List<SongModel> startSong = [];
-
-class _HomeScreenState extends State<HomeScreen> {
   final OnAudioQuery _audioQuery = OnAudioQuery();
+
   final AudioPlayer _audioPlayer = AudioPlayer();
 
   List<SongModel> allSongs = [];
@@ -40,13 +34,10 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   @override
-  void initState() {
-    GetAllSongController.audioPlayer.currentIndexStream.listen((index) {});
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      GetAllSongController.audioPlayer.currentIndexStream.listen((index) {});
+    });
     return WillPopScope(
       onWillPop: () {
         _onButtonPressed(context);
@@ -159,8 +150,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                   );
                                 }
                                 startSong = items.data!;
-                                if (!FavoriteDb.isInitialized) {
-                                  FavoriteDb.initialize(items.data!);
+                                if (!Provider.of<FavoriteDb>(context).isInitialized) {
+                                 Provider.of<FavoriteDb>(context).initialize(items.data!);
                                 }
                                 GetAllSongController.songscopy =
                                     items.data!; //for playlist
@@ -438,3 +429,5 @@ class _HomeScreenState extends State<HomeScreen> {
     return exitApp ?? false;
   }
 }
+
+List<SongModel> startSong = [];

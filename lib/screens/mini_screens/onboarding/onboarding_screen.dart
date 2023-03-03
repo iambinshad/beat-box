@@ -82,7 +82,7 @@ class OnBoardingScreen extends StatelessWidget {
 
                                     Navigator.pushAndRemoveUntil(context,
                                         MaterialPageRoute(builder: (context) {
-                                      return const BottomNavScreen();
+                                      return  BottomNavScreen();
                                     }), (route) => false);
                                   },
                                   child: Container(
@@ -129,7 +129,7 @@ class OnBoardingScreen extends StatelessWidget {
                             onTap: () {
                               Navigator.pushAndRemoveUntil(context,
                                   MaterialPageRoute(builder: (context) {
-                                return const BottomNavScreen();
+                                return  BottomNavScreen();
                               }), (route) => false);
                             },
                             child: const CircleAvatar(

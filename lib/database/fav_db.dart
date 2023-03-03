@@ -1,36 +1,37 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 
-class FavoriteDb {
-  static bool isInitialized = false;
-  static final musicDb = Hive.box<int>('FavoriteDB');
-  static ValueNotifier<List<SongModel>> favoriteSongs = ValueNotifier([]);
+class FavoriteDb extends ChangeNotifier {
+   bool isInitialized = false;
+   List<SongModel> favoriteSongs = [];
+   final musicDb = Hive.box<int>('FavoriteDB');
 
-  static initialize(List<SongModel> songs) {
+  initialize(List<SongModel> songs) {
     for (SongModel song in songs) {
       if (isFavor(song)) {
-        favoriteSongs.value.add(song);
+        // favoriteSongs.value.add(song);
+        favoriteSongs.add(song);
       }
     }
 
     isInitialized = true;
   }
 
-  static isFavor(SongModel song) {
+   isFavor(SongModel song) {
     if (musicDb.values.contains(song.id)) {
       return true;
     }
     return false;
   }
 
-  static add(SongModel song) async {
+  add(SongModel song) async {
     musicDb.add(song.id);
-    favoriteSongs.value.add(song);
-    FavoriteDb.favoriteSongs.notifyListeners();
+    favoriteSongs.add(song);
+    notifyListeners();
   }
 
-  static delete(int id) async {
+  delete(int id) async {
     int deletekey = 0;
     if (!musicDb.values.contains(id)) {
       return;
@@ -42,13 +43,15 @@ class FavoriteDb {
       }
     });
     musicDb.delete(deletekey);
-    favoriteSongs.value.removeWhere((song) => song.id == id);
+    favoriteSongs.removeWhere((song) => song.id == id);
+    notifyListeners();
   }
 
-  static clear() async {
+  clear() async {
     final musicDb = Hive.box<int>('FavoriteDB');
     musicDb.clear();
 
-    FavoriteDb.favoriteSongs.value.clear();
+    favoriteSongs.clear();
+    notifyListeners();
   }
 }

@@ -1,28 +1,24 @@
 
 import 'package:flutter/material.dart';
 import 'package:on_audio_query/on_audio_query.dart';
+import 'package:provider/provider.dart';
 
 import '../../../database/fav_db.dart';
 
-class FavButMusicPlaying extends StatefulWidget {
+class FavButMusicPlaying extends StatelessWidget {
   const FavButMusicPlaying({super.key, required this.songFavoriteMusicPlaying});
   final SongModel songFavoriteMusicPlaying;
 
   @override
-  State<FavButMusicPlaying> createState() => _FavoriteButtonState();
-}
-
-class _FavoriteButtonState extends State<FavButMusicPlaying> {
-  @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder(
-        valueListenable: FavoriteDb.favoriteSongs,
+    return Consumer<FavoriteDb>(
+        
         builder:
-            (BuildContext ctx, List<SongModel> favoriteData, Widget? child) {
+            (context, value, child) {
           return IconButton(
             onPressed: () {
-              if (FavoriteDb.isFavor(widget.songFavoriteMusicPlaying)) {
-                FavoriteDb.delete(widget.songFavoriteMusicPlaying.id);
+              if (value.isFavor(songFavoriteMusicPlaying)) {
+                value.delete(songFavoriteMusicPlaying.id);
                 const snackBar = SnackBar(
                   content: Text(
                     'Removed From Favorite',
@@ -32,7 +28,7 @@ class _FavoriteButtonState extends State<FavButMusicPlaying> {
                 );
                 ScaffoldMessenger.of(context).showSnackBar(snackBar);
               } else {
-                FavoriteDb.add(widget.songFavoriteMusicPlaying);
+                value.add(songFavoriteMusicPlaying);
                 const snackbar = SnackBar(
                   backgroundColor: Colors.black,
                   content: Text(
@@ -44,9 +40,9 @@ class _FavoriteButtonState extends State<FavButMusicPlaying> {
                 ScaffoldMessenger.of(context).showSnackBar(snackbar);
               }
 
-              FavoriteDb.favoriteSongs.notifyListeners();
+              
             },
-            icon: FavoriteDb.isFavor(widget.songFavoriteMusicPlaying)
+            icon: value.isFavor(songFavoriteMusicPlaying)
                 ? const Icon(
                   
                     Icons.favorite,
