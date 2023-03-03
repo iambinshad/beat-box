@@ -1,14 +1,13 @@
 import 'dart:developer';
 import 'package:beatabox/controller/get_all_song_controller.dart';
 import 'package:beatabox/model/fav_model.dart';
-import 'package:beatabox/provider/now_playing_provider/now_playing_pro.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:on_audio_query/on_audio_query.dart';
-import 'package:provider/provider.dart';
 import 'package:text_scroll/text_scroll.dart';
 import 'package:lottie/lottie.dart';
+import '../../database/fav_db.dart';
 import '../../database/playlist_db.dart';
 import '../main_screens/favorites/favorite_notifying.dart';
 import '../main_screens/playlist/playlist_screen.dart';
@@ -29,14 +28,34 @@ final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 class _NowPlayingScreenState extends State<NowPlayingScreen> {
   Duration _duration = const Duration();
   Duration _position = const Duration();
-  // bool _firstsong = false;
+  bool _firstsong = false;
   List<AudioSource> songList = [];
-  // int large = 0;
-  // bool _lastSong = false;
+  bool _isShuffling = false;
+  bool _lastSong = false;
   int currentIndex = 0;
+  int large = 0;
 
   @override
-  void initState() {}
+  void initState() {
+    GetAllSongController.audioPlayer.currentIndexStream.listen((index) {
+      if (index != null) {
+        GetAllSongController.currentIndexes = index;
+        if(mounted){
+          setState(() {
+          large = widget.count - 1; //store the last song's index number
+
+          currentIndex = index;
+          index == 0 ? _firstsong = true : _firstsong = false;
+          index == large ? _lastSong = true : _lastSong = false;
+        });
+        }
+
+        log('index of last song ${widget.count}');
+      }
+    });
+    super.initState();
+    playSong();
+  }
 
   String _formatDuration(Duration? duration) {
     if (duration == null) {
@@ -52,23 +71,23 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
   void playSong() {
     GetAllSongController.audioPlayer.play();
     GetAllSongController.audioPlayer.durationStream.listen((d) {
+    if(mounted){
       setState(() {
         _duration = d!;
       });
+    }
     });
     GetAllSongController.audioPlayer.positionStream.listen((p) {
-      setState(() {
+      if(mounted){
+        setState(() {
         _position = p;
       });
+      }
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    var nowProv = Provider.of<NowProvider>(context);
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      onStart(context,nowProv);
-    });
     return Container(
       decoration: const BoxDecoration(
           gradient: LinearGradient(
@@ -95,6 +114,7 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
                               highlightColor: Colors.transparent,
                               onPressed: () {
                                 Navigator.pop(context);
+                                
                               },
                               icon: const Padding(
                                 padding: EdgeInsets.only(left: 15),
@@ -243,10 +263,12 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
                                       value: _position.inSeconds.toDouble(),
                                       max: _duration.inSeconds.toDouble(),
                                       onChanged: (value) {
-                                        setState(() {
+                                        if(mounted){
+                                          setState(() {
                                           ChangeToSeconds(value.toInt());
                                           value = value;
                                         });
+                                        }
                                       },
                                     ),
                                   ),
@@ -270,20 +292,20 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
                           IconButton(
                             onPressed: () {
                               setState(() {
-                                nowProv.isShuffling == false
+                                _isShuffling == false
                                     ? GetAllSongController.audioPlayer
                                         .setShuffleModeEnabled(true)
                                     : GetAllSongController.audioPlayer
                                         .setShuffleModeEnabled(false);
                               });
                             },
-                            icon: StreamBuilder(
+                            icon: StreamBuilder<bool>(
                               stream: GetAllSongController
                                   .audioPlayer.shuffleModeEnabledStream,
                               builder: (BuildContext context,
                                   AsyncSnapshot snapshot) {
-                                nowProv.isShuffling = snapshot.data;
-                                if (nowProv.isShuffling) {
+                                _isShuffling = snapshot.data;
+                                if (_isShuffling) {
                                   return const Icon(
                                     Icons.shuffle_rounded,
                                     color: Colors.purpleAccent,
@@ -297,7 +319,7 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
                               },
                             ),
                           ),
-                          nowProv.firstsong
+                          _firstsong
                               ? const IconButton(
                                   iconSize: 40,
                                   onPressed: null,
@@ -330,7 +352,7 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
                                 await GetAllSongController.audioPlayer.pause();
                               } else {
                                 await GetAllSongController.audioPlayer.play();
-                                setState(() {});
+                                
                               }
                             },
                             child: StreamBuilder<bool>(
@@ -360,7 +382,7 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
                               },
                             ),
                           ),
-                          nowProv.lastSong
+                          _lastSong
                               ? const IconButton(
                                   iconSize: 40,
                                   onPressed: null,
@@ -677,27 +699,5 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
   void ChangeToSeconds(int seconds) {
     Duration duration = Duration(seconds: seconds);
     GetAllSongController.audioPlayer.seek(duration);
-  }
-
-  void onStart(context,nowProv) {
-    
-    GetAllSongController.audioPlayer.currentIndexStream.listen((index) {
-      if (index != null) {
-        GetAllSongController.currentIndexes = index;
-        
-          nowProv.large = widget.count - 1; //store the last song's index number
-
-          currentIndex = index;
-          index == 0 ? nowProv.firstsong = true : nowProv.firstsong = false;
-          index == nowProv.large
-              ? nowProv.lastSong = true
-              : nowProv.lastSong = false;
-        
-
-        log('index of last song ${widget.count}');
-      }
-    });
-
-    playSong();
   }
 }
