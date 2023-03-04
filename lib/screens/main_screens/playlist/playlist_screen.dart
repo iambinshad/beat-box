@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:lottie/lottie.dart';
+import 'package:provider/provider.dart';
 
 import '../../../database/playlist_db.dart';
 import '../../../model/fav_model.dart';
@@ -292,7 +293,8 @@ Future<dynamic> editPlaylistName(
                     return;
                   } else {
                     final playlistName = FavModel(name: name, songId: []);
-                    PlaylistDb.editList(index, playlistName);
+                    Provider.of<PlaylistDb>(context, listen: false)
+                        .editList(index, playlistName);
                   }
                   nameController.clear();
                   Navigator.pop(context);
@@ -457,7 +459,11 @@ Future newplaylist(BuildContext context, formKey) {
 Future<void> saveButtonPressed(context) async {
   final name = nameController.text.trim();
   final music = FavModel(name: name, songId: []);
-  final datas = PlaylistDb.playlistDb.values.map((e) => e.name.trim()).toList();
+  final datas = Provider.of<PlaylistDb>(context, listen: false)
+      .playlistDb
+      .values
+      .map((e) => e.name.trim())
+      .toList();
   if (name.isEmpty) {
     return;
   } else if (datas.contains(music.name)) {
@@ -471,7 +477,7 @@ Future<void> saveButtonPressed(context) async {
     ScaffoldMessenger.of(context).showSnackBar(snackbar3);
     Navigator.of(context).pop();
   } else {
-    PlaylistDb.addPlaylist(music);
+    Provider.of<PlaylistDb>(context, listen: false).addPlaylist(music);
     const snackbar4 = SnackBar(
         duration: Duration(milliseconds: 750),
         backgroundColor: Colors.black,

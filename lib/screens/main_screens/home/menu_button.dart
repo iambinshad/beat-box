@@ -299,7 +299,7 @@ class FavOrPlayMenuButton extends StatelessWidget {
     final name = nameController.text.trim();
     final music = FavModel(name: name, songId: []);
     final datas =
-        PlaylistDb.playlistDb.values.map((e) => e.name.trim()).toList();
+        Provider.of<PlaylistDb>(context).playlistDb.values.map((e) => e.name.trim()).toList();
     if (name.isEmpty) {
       return;
     } else if (datas.contains(music.name)) {
@@ -313,7 +313,7 @@ class FavOrPlayMenuButton extends StatelessWidget {
       ScaffoldMessenger.of(context).showSnackBar(snackbar3);
       Navigator.of(context).pop();
     } else {
-      PlaylistDb.addPlaylist(music);
+      Provider.of<PlaylistDb>(context).addPlaylist(music);
       const snackbar4 = SnackBar(
           duration: Duration(milliseconds: 750),
           backgroundColor: Colors.black,

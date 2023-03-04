@@ -8,18 +8,13 @@ import '../../../model/fav_model.dart';
 import '../../../provider/songmodel_provider.dart';
 import 'package:provider/provider.dart';
 
-class PlaylistSongs extends StatefulWidget {
+class PlaylistSongs extends StatelessWidget {
   final FavModel playlist;
   final int findex;
 
   const PlaylistSongs(
       {super.key, required this.playlist, required this.findex});
 
-  @override
-  State<PlaylistSongs> createState() => _PlaylistSongsState();
-}
-
-class _PlaylistSongsState extends State<PlaylistSongs> {
   @override
   Widget build(BuildContext context) {
     late List<SongModel> songPlaylist;
@@ -51,7 +46,7 @@ class _PlaylistSongsState extends State<PlaylistSongs> {
                         ),
                       ),
                       Text(
-                        widget.playlist.name,
+                        playlist.name,
                         style: const TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
@@ -73,7 +68,7 @@ class _PlaylistSongsState extends State<PlaylistSongs> {
                         Navigator.push(context, MaterialPageRoute(
                           builder: (context) {
                             return SongListAddPage(
-                              playlist: widget.playlist,
+                              playlist: playlist,
                             );
                           },
                         ));
@@ -131,7 +126,7 @@ class _PlaylistSongsState extends State<PlaylistSongs> {
                               builder: (BuildContext context,
                                   Box<FavModel> music, Widget? child) {
                                 songPlaylist = listPlaylist(music.values
-                                    .toList()[widget.findex]
+                                    .toList()[findex]
                                     .songId);
                                 return songPlaylist.isEmpty
                                     ? const Center(
@@ -275,7 +270,7 @@ class _PlaylistSongsState extends State<PlaylistSongs> {
             ),
             ElevatedButton(
               onPressed: () {
-                widget.playlist.deleteData(songplaylist[index].id);
+                playlist.deleteData(songplaylist[index].id);
                 Navigator.pop(context);
                 const snackBar = SnackBar(
                   backgroundColor: Colors.black,

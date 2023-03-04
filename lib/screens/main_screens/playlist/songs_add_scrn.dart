@@ -1,20 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:on_audio_query/on_audio_query.dart';
+import 'package:provider/provider.dart';
 
 import '../../../database/playlist_db.dart';
 import '../../../model/fav_model.dart';
 import '../home/search_screen.dart';
 
-class SongListAddPage extends StatefulWidget {
+class SongListAddPage extends StatelessWidget {
   const SongListAddPage({super.key, required this.playlist});
   final FavModel playlist;
   @override
-  State<SongListAddPage> createState() => _SongListPageState();
-}
-
-class _SongListPageState extends State<SongListAddPage> {
-  @override
   Widget build(BuildContext context) {
+    final playListPro = Provider.of<PlaylistDb>(context);
+
     return Container(
       decoration: const BoxDecoration(
           gradient: LinearGradient(colors: [
@@ -136,59 +134,67 @@ class _SongListPageState extends State<SongListAddPage> {
                                                 padding: const EdgeInsets.only(
                                                     right: 10),
                                                 child: Wrap(children: [
-                                                  !widget.playlist.isValueIn(
+                                                  !playlist.isValueIn(
                                                           item.data![index].id)
                                                       ? IconButton(
                                                           onPressed: () {
-                                                            setState(() {
-                                                              songAddPlaylist(
-                                                                  item.data![
-                                                                      index]);
-                                                              PlaylistDb
-                                                                  .playlistNotifiier
-                                                                  .notifyListeners();
-                                                            });
+                                                            songAddPlaylist(
+                                                                item.data![
+                                                                    index],
+                                                                context);
+
+                                                            playListPro
+                                                                .notifyListeners();
                                                           },
                                                           icon: const Icon(
                                                             Icons.add,
                                                             color: Colors.white,
                                                           ))
-                                                     : IconButton(
-                                                          onPressed: () {
-                                                            setState(() {
-                                                              widget.playlist
-                                                                  .deleteData(item
-                                                                      .data![
-                                                                          index]
-                                                                      .id);
-                                                            });
-                                                            const snackBar =
-                                                                SnackBar(
-                                                              content: Text(
-                                                                'Song deleted from playlist',
-                                                                style: TextStyle(
-                                                                    color: Colors
-                                                                        .white),
-                                                              ),
-                                                              duration: Duration(
-                                                                  milliseconds:
-                                                                      450),
-                                                            );
-                                                            ScaffoldMessenger
-                                                                    .of(context)
-                                                                .showSnackBar(
-                                                                    snackBar);
-                                                          },
-                                                          icon: const Padding(
-                                                            padding:
-                                                                EdgeInsets.only(
-                                                                    bottom: 25),
-                                                            child: Icon(
-                                                              Icons.minimize,
-                                                              color:
-                                                                  Colors.white,
-                                                            ),
-                                                          ))
+                                                      : Consumer<PlaylistDb>(
+                                                          builder: (context,
+                                                                  value,
+                                                                  child) =>
+                                                              IconButton(
+                                                                  onPressed:
+                                                                      () {
+                                                                    playlist.deleteData(item
+                                                                        .data![
+                                                                            index]
+                                                                        .id);
+                                                                    value
+                                                                        .notifyListeners();
+
+                                                                    const snackBar =
+                                                                        SnackBar(
+                                                                      content:
+                                                                          Text(
+                                                                        'Song deleted from playlist',
+                                                                        style: TextStyle(
+                                                                            color:
+                                                                                Colors.white),
+                                                                      ),
+                                                                      duration: Duration(
+                                                                          milliseconds:
+                                                                              450),
+                                                                    );
+                                                                    ScaffoldMessenger.of(
+                                                                            context)
+                                                                        .showSnackBar(
+                                                                            snackBar);
+                                                                  },
+                                                                  icon:
+                                                                      const Padding(
+                                                                    padding: EdgeInsets.only(
+                                                                        bottom:
+                                                                            25),
+                                                                    child: Icon(
+                                                                      Icons
+                                                                          .minimize,
+                                                                      color: Colors
+                                                                          .white,
+                                                                    ),
+                                                                  )),
+                                                        )
                                                 ]),
                                               )),
                                         ),
@@ -207,8 +213,8 @@ class _SongListPageState extends State<SongListAddPage> {
     );
   }
 
-  void songAddPlaylist(SongModel data) {
-    widget.playlist.add(data.id);
+  void songAddPlaylist(SongModel data, context) {
+    playlist.add(data.id);
 
     const snackBar1 = SnackBar(
         content: Text(

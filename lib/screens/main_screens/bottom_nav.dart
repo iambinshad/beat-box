@@ -2,10 +2,8 @@ import 'package:beatabox/provider/bottom_nav_provider/bottom_nav_provider.dart';
 import 'package:beatabox/screens/main_screens/playlist/playlist_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
-import 'package:on_audio_query/on_audio_query.dart';
 import 'package:provider/provider.dart';
 
-import '../../database/fav_db.dart';
 import 'favorites/favorite_screen.dart';
 import 'home/home_screen.dart';
 import 'settings/settings_screen.dart';

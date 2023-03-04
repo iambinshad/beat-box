@@ -1,13 +1,14 @@
 import 'dart:developer';
 import 'package:beatabox/controller/get_all_song_controller.dart';
 import 'package:beatabox/model/fav_model.dart';
+import 'package:beatabox/provider/now_playing_provider/now_playing_pro.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:on_audio_query/on_audio_query.dart';
+import 'package:provider/provider.dart';
 import 'package:text_scroll/text_scroll.dart';
 import 'package:lottie/lottie.dart';
-import '../../database/fav_db.dart';
 import '../../database/playlist_db.dart';
 import '../main_screens/favorites/favorite_notifying.dart';
 import '../main_screens/playlist/playlist_screen.dart';
@@ -30,7 +31,6 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
   Duration _position = const Duration();
   bool _firstsong = false;
   List<AudioSource> songList = [];
-  bool _isShuffling = false;
   bool _lastSong = false;
   int currentIndex = 0;
   int large = 0;
@@ -40,14 +40,14 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
     GetAllSongController.audioPlayer.currentIndexStream.listen((index) {
       if (index != null) {
         GetAllSongController.currentIndexes = index;
-        if(mounted){
+        if (mounted) {
           setState(() {
-          large = widget.count - 1; //store the last song's index number
+            large = widget.count - 1; //store the last song's index number
 
-          currentIndex = index;
-          index == 0 ? _firstsong = true : _firstsong = false;
-          index == large ? _lastSong = true : _lastSong = false;
-        });
+            currentIndex = index;
+            index == 0 ? _firstsong = true : _firstsong = false;
+            index == large ? _lastSong = true : _lastSong = false;
+          });
         }
 
         log('index of last song ${widget.count}');
@@ -71,23 +71,24 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
   void playSong() {
     GetAllSongController.audioPlayer.play();
     GetAllSongController.audioPlayer.durationStream.listen((d) {
-    if(mounted){
-      setState(() {
-        _duration = d!;
-      });
-    }
+      if (mounted) {
+        setState(() {
+          _duration = d!;
+        });
+      }
     });
     GetAllSongController.audioPlayer.positionStream.listen((p) {
-      if(mounted){
+      if (mounted) {
         setState(() {
-        _position = p;
-      });
+          _position = p;
+        });
       }
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    final playListPro =Provider.of<PlaylistDb>(context);
     return Container(
       decoration: const BoxDecoration(
           gradient: LinearGradient(
@@ -114,7 +115,6 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
                               highlightColor: Colors.transparent,
                               onPressed: () {
                                 Navigator.pop(context);
-                                
                               },
                               icon: const Padding(
                                 padding: EdgeInsets.only(left: 15),
@@ -220,7 +220,7 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
                             ),
                             IconButton(
                                 onPressed: () {
-                                  showPlaylistdialog(context);
+                                  showPlaylistdialog(context,playListPro);
                                 },
                                 icon: const Icon(
                                   Icons.playlist_add,
@@ -254,22 +254,23 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
                                         thumbColor: Colors.deepPurple,
                                         thumbShape: const RoundSliderThumbShape(
                                             enabledThumbRadius: 8)),
-                                    child: Slider(
-                                      activeColor: Colors.purpleAccent,
-                                      inactiveColor: Colors.white38,
-                                      min: const Duration(microseconds: 0)
-                                          .inSeconds
-                                          .toDouble(),
-                                      value: _position.inSeconds.toDouble(),
-                                      max: _duration.inSeconds.toDouble(),
-                                      onChanged: (value) {
-                                        if(mounted){
-                                          setState(() {
-                                          ChangeToSeconds(value.toInt());
-                                          value = value;
-                                        });
-                                        }
-                                      },
+                                    child: Consumer<NowProvider>(
+                                      builder: (context, values, child) =>
+                                          Slider(
+                                        activeColor: Colors.purpleAccent,
+                                        inactiveColor: Colors.white38,
+                                        min: const Duration(microseconds: 0)
+                                            .inSeconds
+                                            .toDouble(),
+                                        value: _position.inSeconds.toDouble(),
+                                        max: _duration.inSeconds.toDouble(),
+                                        onChanged: (value) {
+                                          if (mounted) {
+                                            values.ChangeToSeconds(
+                                                value.toInt());
+                                          }
+                                        },
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -289,34 +290,34 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          IconButton(
-                            onPressed: () {
-                              setState(() {
-                                _isShuffling == false
+                          Consumer<NowProvider>(
+                            builder: (context, value, child) => IconButton(
+                              onPressed: () {
+                                value.isShuffling == false
                                     ? GetAllSongController.audioPlayer
                                         .setShuffleModeEnabled(true)
                                     : GetAllSongController.audioPlayer
                                         .setShuffleModeEnabled(false);
-                              });
-                            },
-                            icon: StreamBuilder<bool>(
-                              stream: GetAllSongController
-                                  .audioPlayer.shuffleModeEnabledStream,
-                              builder: (BuildContext context,
-                                  AsyncSnapshot snapshot) {
-                                _isShuffling = snapshot.data;
-                                if (_isShuffling) {
-                                  return const Icon(
-                                    Icons.shuffle_rounded,
-                                    color: Colors.purpleAccent,
-                                  );
-                                } else {
-                                  return const Icon(
-                                    Icons.shuffle_rounded,
-                                    color: Colors.white,
-                                  );
-                                }
                               },
+                              icon: StreamBuilder<bool>(
+                                stream: GetAllSongController
+                                    .audioPlayer.shuffleModeEnabledStream,
+                                builder: (BuildContext context,
+                                    AsyncSnapshot snapshot) {
+                                  value.isShuffling = snapshot.data;
+                                  if (value.isShuffling) {
+                                    return const Icon(
+                                      Icons.shuffle_rounded,
+                                      color: Colors.purpleAccent,
+                                    );
+                                  } else {
+                                    return const Icon(
+                                      Icons.shuffle_rounded,
+                                      color: Colors.white,
+                                    );
+                                  }
+                                },
+                              ),
                             ),
                           ),
                           _firstsong
@@ -352,7 +353,6 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
                                 await GetAllSongController.audioPlayer.pause();
                               } else {
                                 await GetAllSongController.audioPlayer.play();
-                                
                               }
                             },
                             child: StreamBuilder<bool>(
@@ -440,7 +440,7 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
     );
   }
 
-  showPlaylistdialog(context) {
+  showPlaylistdialog(context,playListPro) {
     showDialog(
         context: context,
         builder: (_) {
@@ -525,7 +525,7 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
             actions: [
               ElevatedButton(
                   onPressed: () {
-                    newplaylist(context, _formKey);
+                    newplaylist(context, _formKey,playListPro);
                   },
                   child: const Text(
                     'New Playlist',
@@ -569,7 +569,7 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
     }
   }
 
-  Future newplaylist(BuildContext context, formKey) {
+  Future newplaylist(BuildContext context, formKey,playListPro) {
     return showDialog(
       context: context,
       builder: (ctx) => SimpleDialog(
@@ -594,7 +594,7 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
             child: Form(
               key: formKey,
               child: TextFormField(
-                textAlign: TextAlign.center,
+                textAlign: TextAlign.left,
                 controller: nameController,
                 maxLength: 15,
                 decoration: InputDecoration(
@@ -644,7 +644,7 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
               SimpleDialogOption(
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
-                    saveButtonPressed(context);
+                    saveButtonPressed(context,playListPro);
                   }
                 },
                 child: const Text(
@@ -663,11 +663,11 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
     );
   }
 
-  Future<void> saveButtonPressed(context) async {
+  Future<void> saveButtonPressed(context,playListPro) async {
     final name = nameController.text.trim();
     final music = FavModel(name: name, songId: []);
     final datas =
-        PlaylistDb.playlistDb.values.map((e) => e.name.trim()).toList();
+        playListPro.playlistDb.values.map((e) => e.name.trim()).toList();
     if (name.isEmpty) {
       return;
     } else if (datas.contains(music.name)) {
@@ -681,7 +681,7 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
       ScaffoldMessenger.of(context).showSnackBar(snackbar3);
       Navigator.of(context).pop();
     } else {
-      PlaylistDb.addPlaylist(music);
+      playListPro.addPlaylist(music);
       const snackbar4 = SnackBar(
           duration: Duration(milliseconds: 750),
           backgroundColor: Colors.black,
@@ -696,8 +696,5 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
   }
 
   // ignore: non_constant_identifier_names
-  void ChangeToSeconds(int seconds) {
-    Duration duration = Duration(seconds: seconds);
-    GetAllSongController.audioPlayer.seek(duration);
-  }
+
 }

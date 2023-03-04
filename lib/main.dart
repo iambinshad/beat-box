@@ -12,6 +12,8 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:just_audio_background/just_audio_background.dart';
 import 'package:provider/provider.dart';
 
+import 'database/playlist_db.dart';
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   if (!Hive.isAdapterRegistered(FavModelAdapter().typeId)) {
@@ -46,7 +48,8 @@ class MyApp extends StatelessWidget {
         ListenableProvider(create: (context) => BottomNavProv(),),
         ListenableProvider(create: (context) => SearchProvider(),),
          ListenableProvider(create: (context) => FavoriteDb(),),
-         ListenableProvider(create: (context) => NowProvider(),)
+         ListenableProvider(create: (context) => NowProvider(),),
+         ListenableProvider(create: (context) => PlaylistDb(),)
 
       ],
       child: MaterialApp(
