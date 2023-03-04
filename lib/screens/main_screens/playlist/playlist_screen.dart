@@ -8,17 +8,9 @@ import 'package:provider/provider.dart';
 import '../../../database/playlist_db.dart';
 import '../../../model/fav_model.dart';
 
-class PlaylistScreen extends StatefulWidget {
+class PlaylistScreen extends StatelessWidget {
   const PlaylistScreen({super.key});
 
-  @override
-  State<PlaylistScreen> createState() => _PlaylistScreenState();
-}
-
-final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-TextEditingController nameController = TextEditingController();
-
-class _PlaylistScreenState extends State<PlaylistScreen> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -211,6 +203,10 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
     );
   }
 }
+
+
+final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+TextEditingController nameController = TextEditingController();
 
 Future<dynamic> editPlaylistName(
     BuildContext context, FavModel data, int index) {
