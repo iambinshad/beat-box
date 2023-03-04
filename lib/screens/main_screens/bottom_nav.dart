@@ -5,7 +5,7 @@ import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:provider/provider.dart';
 
 import 'favorites/favorite_screen.dart';
-import 'home/home_screen.dart';
+import 'home/home/home_screen.dart';
 import 'settings/settings_screen.dart';
 
 class BottomNavScreen extends StatelessWidget {
