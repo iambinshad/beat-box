@@ -87,6 +87,7 @@ flutter:
     - assets/home_screen/
     - assets/lottie/add-new-playlist.json
     - assets/lottie/1725-not-found.json
+    - assets/home_screen/integrated logo.png
     - assets/home_screen/Premium_Photo___Headphones_on_dark_black_background-removebg-preview.png
     - assets/splash-img/Premium_Photo___Headphones_on_dark_black_background-removebg-preview.png
   # An image asset can refer to one or more resolution-specific "variants", see

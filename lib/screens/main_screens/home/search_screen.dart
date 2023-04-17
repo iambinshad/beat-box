@@ -5,18 +5,23 @@ import 'package:just_audio/just_audio.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
-
 import '../../../controller/get_all_song_controller.dart';
 import '../../../provider/songmodel_provider.dart';
 import '../favorites/favorite_notifying.dart';
 
-class SearchScreen extends StatelessWidget {
+class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
 
+  @override
+  State<SearchScreen> createState() => _SearchScreenState();
+}
+
+class _SearchScreenState extends State<SearchScreen> {
   @override
   Widget build(BuildContext context) {
 var searchProvider = Provider.of<SearchProvider>(context);
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      Provider.of<SearchProvider>(context,listen: false).foundSongs=allsongs;
       songsLoading(searchProvider);
       
     });

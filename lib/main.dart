@@ -2,6 +2,7 @@ import 'package:beatabox/database/fav_db.dart';
 import 'package:beatabox/provider/bottom_nav_provider/bottom_nav_provider.dart';
 import 'package:beatabox/provider/home_page_provider/home_provider.dart';
 import 'package:beatabox/provider/home_page_provider/search_provider.dart';
+import 'package:beatabox/provider/mini_player_provider/mini_player_prov.dart';
 import 'package:beatabox/provider/now_playing_provider/now_playing_pro.dart';
 import 'package:beatabox/provider/onboarding_provider/onboarding.dart';
 import 'package:beatabox/screens/mini_screens/splash_screen.dart';
@@ -37,7 +38,7 @@ Future<void> main() async {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
+ 
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -49,7 +50,8 @@ class MyApp extends StatelessWidget {
         ListenableProvider(create: (context) => SearchProvider(),),
          ListenableProvider(create: (context) => FavoriteDb(),),
          ListenableProvider(create: (context) => NowProvider(),),
-         ListenableProvider(create: (context) => PlaylistDb(),)
+         ListenableProvider(create: (context) => PlaylistDb(),),
+         ListenableProvider(create: (context) => MiniPlayerProv(),)
 
       ],
       child: MaterialApp(
