@@ -15,6 +15,7 @@ class SettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final height = MediaQuery.of(context).size.height;
     return Container(
       decoration: const BoxDecoration(
           gradient: LinearGradient(colors: [
@@ -96,8 +97,8 @@ class SettingsScreen extends StatelessWidget {
                     yourIcon: Icons.share_outlined,
                   ),
                 ),
-                const SizedBox(
-                  height: 300,
+                 SizedBox(
+                  height: height/4,
                 ),
                 const Center(
                     child: Text(
