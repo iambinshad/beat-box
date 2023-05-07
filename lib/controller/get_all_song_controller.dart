@@ -6,7 +6,7 @@ import 'package:on_audio_query/on_audio_query.dart';
 class GetAllSongController {
   static AudioPlayer audioPlayer = AudioPlayer();
   static List<SongModel> songscopy = [];
-  static List<SongModel> playingSong = [];
+  static List<SongModel>? playingSong = [];
   static int currentIndexes = -1;
   static ConcatenatingAudioSource createSongList(List<SongModel> elements) {
     List<AudioSource> songList = [];

@@ -1,3 +1,4 @@
+import 'package:beatabox/controller/bottom_nav_controller.dart';
 import 'package:beatabox/database/fav_db.dart';
 import 'package:beatabox/provider/bottom_nav_provider/bottom_nav_provider.dart';
 import 'package:beatabox/provider/home_page_provider/home_provider.dart';
@@ -8,6 +9,7 @@ import 'package:beatabox/screens/mini_screens/splash_screen.dart';
 import 'package:beatabox/model/fav_model.dart';
 import 'package:beatabox/provider/songmodel_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:just_audio_background/just_audio_background.dart';
 import 'package:provider/provider.dart';
@@ -49,7 +51,8 @@ class MyApp extends StatelessWidget {
         ListenableProvider(create: (context) => SearchProvider(),),
          ListenableProvider(create: (context) => FavoriteDb(),),
          ListenableProvider(create: (context) => NowProvider(),),
-         ListenableProvider(create: (context) => PlaylistDb(),)
+         ListenableProvider(create: (context) => PlaylistDb(),),
+         ListenableProvider(create: (context) => BottomNavController(),)
 
       ],
       child: MaterialApp(

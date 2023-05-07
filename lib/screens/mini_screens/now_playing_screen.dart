@@ -304,7 +304,7 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
                                     .audioPlayer.shuffleModeEnabledStream,
                                 builder: (BuildContext context,
                                     AsyncSnapshot snapshot) {
-                                  value.isShuffling = snapshot.data;
+                                  value.isShuffling = snapshot.data??false;
                                   if (value.isShuffling) {
                                     return const Icon(
                                       Icons.shuffle_rounded,
