@@ -1,9 +1,10 @@
 import 'package:beatabox/screens/main_screens/playlist/songs_add_scrn.dart';
+import 'package:beatabox/screens/mini_screens/tabs/tab.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import '../../../controller/get_all_song_controller.dart';
-import '../../mini_screens/now_playing_screen.dart';
+import '../../mini_screens/tabs/now_playing_screen.dart';
 import '../../../model/fav_model.dart';
 import '../../../provider/songmodel_provider.dart';
 import 'package:provider/provider.dart';
@@ -219,7 +220,7 @@ class PlaylistSongs extends StatelessWidget {
                                                   Navigator.push(context,
                                                       MaterialPageRoute(
                                                           builder: (context) {
-                                                    return NowPlayingScreen(
+                                                    return NowPlayingTab(
                                                       songModelList:
                                                           songPlaylist,
                                                       count:

@@ -1,4 +1,5 @@
-import 'package:beatabox/screens/mini_screens/now_playing_screen.dart';
+import 'package:beatabox/screens/mini_screens/tabs/now_playing_screen.dart';
+import 'package:beatabox/screens/mini_screens/tabs/tab.dart';
 import 'package:flutter/material.dart';
 
 import 'package:on_audio_query/on_audio_query.dart';
@@ -173,7 +174,7 @@ class FavouriteScreen extends StatelessWidget {
                                                         context,
                                                         MaterialPageRoute(
                                                           builder: (context) =>
-                                                              NowPlayingScreen(
+                                                              NowPlayingTab(
                                                                   songModelList:
                                                                       favoriteList),
                                                         ));

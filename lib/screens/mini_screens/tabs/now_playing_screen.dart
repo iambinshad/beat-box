@@ -9,10 +9,10 @@ import 'package:on_audio_query/on_audio_query.dart';
 import 'package:provider/provider.dart';
 import 'package:text_scroll/text_scroll.dart';
 import 'package:lottie/lottie.dart';
-import '../../database/playlist_db.dart';
-import '../main_screens/favorites/favorite_notifying.dart';
-import '../main_screens/playlist/playlist_screen.dart';
-import 'art_work_widget.dart';
+import '../../../database/playlist_db.dart';
+import '../../main_screens/favorites/favorite_notifying.dart';
+import '../../main_screens/playlist/playlist_screen.dart';
+import '../art_work_widget.dart';
 
 class NowPlayingScreen extends StatefulWidget {
   const NowPlayingScreen(
@@ -27,8 +27,6 @@ class NowPlayingScreen extends StatefulWidget {
 final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
 class _NowPlayingScreenState extends State<NowPlayingScreen> {
-  Duration _duration = const Duration();
-  Duration _position = const Duration();
   bool _firstsong = false;
   List<AudioSource> songList = [];
   bool _lastSong = false;
@@ -40,20 +38,21 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
     GetAllSongController.audioPlayer.currentIndexStream.listen((index) {
       if (index != null) {
         GetAllSongController.currentIndexes = index;
-        if (mounted) {
-          setState(() {
-            large = widget.count - 1; //store the last song's index number
+        
+         if(mounted){ setState(() {
+            large = widget.count - 1;
 
             currentIndex = index;
             index == 0 ? _firstsong = true : _firstsong = false;
             index == large ? _lastSong = true : _lastSong = false;
-          });
-        }
+          });}
+        
 
         log('index of last song ${widget.count}');
       }
     });
     super.initState();
+
     playSong();
   }
 
@@ -68,27 +67,9 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
     }
   }
 
-  void playSong() {
-    GetAllSongController.audioPlayer.play();
-    GetAllSongController.audioPlayer.durationStream.listen((d) {
-      if (mounted) {
-        setState(() {
-          _duration = d!;
-        });
-      }
-    });
-    GetAllSongController.audioPlayer.positionStream.listen((p) {
-      if (mounted) {
-        setState(() {
-          _position = p;
-        });
-      }
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    final playListPro =Provider.of<PlaylistDb>(context);
+    final playListPro = Provider.of<PlaylistDb>(context);
     return Container(
       decoration: const BoxDecoration(
           gradient: LinearGradient(
@@ -105,40 +86,6 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
                 children: [
                   Column(
                     children: [
-                      Padding(
-                        padding:
-                            const EdgeInsets.only(top: 20, right: 8, left: 8),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            IconButton(
-                              highlightColor: Colors.transparent,
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              icon: const Padding(
-                                padding: EdgeInsets.only(left: 15),
-                                child: Icon(
-                                  Icons.keyboard_arrow_down_outlined,
-                                  color: Colors.white,
-                                  size: 30,
-                                ),
-                              ),
-                            ),
-                            const Text(
-                              'NOW PLAYING',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 25,
-                                  fontFamily: 'poppins'),
-                            ),
-                            const SizedBox(
-                              width: 45,
-                            ),
-                          ],
-                        ),
-                      ),
                       const SizedBox(
                         height: 50,
                       ),
@@ -220,7 +167,7 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
                             ),
                             IconButton(
                                 onPressed: () {
-                                  showPlaylistdialog(context,playListPro);
+                                  showPlaylistdialog(context, playListPro);
                                 },
                                 icon: const Icon(
                                   Icons.playlist_add,
@@ -233,52 +180,59 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
                       const SizedBox(
                         height: 20,
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(right: 10, left: 10),
-                        child: SizedBox(
-                          height: 30,
-                          width: double.infinity,
-                          child: Padding(
-                            padding: const EdgeInsets.only(right: 10, left: 10),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(_formatDuration(_position),
-                                    style: const TextStyle(
-                                        color: Colors.white,
-                                        fontFamily: 'poppins')),
-                                SizedBox(
-                                  width: 280,
-                                  child: SliderTheme(
-                                    data: SliderTheme.of(context).copyWith(
-                                        thumbColor: Colors.deepPurple,
-                                        thumbShape: const RoundSliderThumbShape(
-                                            enabledThumbRadius: 8)),
-                                    child: Consumer<NowProvider>(
-                                      builder: (context, values, child) =>
-                                          Slider(
-                                        activeColor: Colors.purpleAccent,
-                                        inactiveColor: Colors.white38,
-                                        min: const Duration(microseconds: 0)
-                                            .inSeconds
-                                            .toDouble(),
-                                        value: _position.inSeconds.toDouble(),
-                                        max: _duration.inSeconds.toDouble(),
-                                        onChanged: (value) {
-                                          if (mounted) {
-                                            values.ChangeToSeconds(
-                                                value.toInt());
-                                          }
-                                        },
+                      Consumer<NowProvider>(
+                        builder: (context, value, child) => Padding(
+                          padding: const EdgeInsets.only(right: 10, left: 10),
+                          child: SizedBox(
+                            height: 30,
+                            width: double.infinity,
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.only(right: 10, left: 10),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(_formatDuration(value.position),
+                                      style: const TextStyle(
+                                          color: Colors.white,
+                                          fontFamily: 'poppins')),
+                                  SizedBox(
+                                    width: 280,
+                                    child: SliderTheme(
+                                      data: SliderTheme.of(context).copyWith(
+                                          thumbColor: Colors.deepPurple,
+                                          thumbShape:
+                                              const RoundSliderThumbShape(
+                                                  enabledThumbRadius: 8)),
+                                      child: Consumer<NowProvider>(
+                                        builder: (context, values, child) =>
+                                            Slider(
+                                          activeColor: Colors.purpleAccent,
+                                          inactiveColor: Colors.white38,
+                                          min: const Duration(microseconds: 0)
+                                              .inSeconds
+                                              .toDouble(),
+                                          value: value.position.inSeconds
+                                              .toDouble(),
+                                          max: value.duration.inSeconds
+                                              .toDouble(),
+                                          onChanged: (value) {
+                                            if (mounted) {
+                                              values.ChangeToSeconds(
+                                                  value.toInt());
+                                            }
+                                          },
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                                Text(_formatDuration(_duration),
-                                    style: const TextStyle(
-                                        color: Colors.white,
-                                        fontFamily: 'poppins')),
-                              ],
+                                  Text(_formatDuration(value.duration),
+                                      style: const TextStyle(
+                                          color: Colors.white,
+                                          fontFamily: 'poppins')),
+                                ],
+                              ),
                             ),
                           ),
                         ),
@@ -304,7 +258,7 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
                                     .audioPlayer.shuffleModeEnabledStream,
                                 builder: (BuildContext context,
                                     AsyncSnapshot snapshot) {
-                                  value.isShuffling = snapshot.data??false;
+                                  value.isShuffling = snapshot.data ?? false;
                                   if (value.isShuffling) {
                                     return const Icon(
                                       Icons.shuffle_rounded,
@@ -440,7 +394,7 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
     );
   }
 
-  showPlaylistdialog(context,playListPro) {
+  showPlaylistdialog(context, playListPro) {
     showDialog(
         context: context,
         builder: (_) {
@@ -525,7 +479,7 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
             actions: [
               ElevatedButton(
                   onPressed: () {
-                    newplaylist(context, _formKey,playListPro);
+                    newplaylist(context, _formKey, playListPro);
                   },
                   child: const Text(
                     'New Playlist',
@@ -569,7 +523,7 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
     }
   }
 
-  Future newplaylist(BuildContext context, formKey,playListPro) {
+  Future newplaylist(BuildContext context, formKey, playListPro) {
     return showDialog(
       context: context,
       builder: (ctx) => SimpleDialog(
@@ -644,7 +598,7 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
               SimpleDialogOption(
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
-                    saveButtonPressed(context,playListPro);
+                    saveButtonPressed(context, playListPro);
                   }
                 },
                 child: const Text(
@@ -663,7 +617,7 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
     );
   }
 
-  Future<void> saveButtonPressed(context,playListPro) async {
+  Future<void> saveButtonPressed(context, playListPro) async {
     final name = nameController.text.trim();
     final music = FavModel(name: name, songId: []);
     final datas =
@@ -695,6 +649,19 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
     }
   }
 
-  // ignore: non_constant_identifier_names
-
+  void playSong() {
+    GetAllSongController.audioPlayer.play();
+    GetAllSongController.audioPlayer.durationStream.listen((d) {
+      // setState(() {
+      //   _duration = d!;
+      // });
+      context.read<NowProvider>().setDuration(d);
+    });
+    GetAllSongController.audioPlayer.positionStream.listen((p) {
+      // setState(() {
+      //   _position = p;
+      // });
+      context.read<NowProvider>().setPostion(p);
+    });
+  }
 }

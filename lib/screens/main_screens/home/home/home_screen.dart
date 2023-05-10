@@ -1,9 +1,11 @@
 import 'dart:developer';
 
 import 'package:beatabox/provider/home_page_provider/home_provider.dart';
+import 'package:beatabox/provider/lyrics_provider.dart';
 import 'package:beatabox/screens/main_screens/home/home/view_type/grid_view.dart';
 import 'package:beatabox/screens/main_screens/home/search_screen.dart';
-import 'package:beatabox/screens/mini_screens/now_playing_screen.dart';
+import 'package:beatabox/screens/mini_screens/tabs/now_playing_screen.dart';
+import 'package:beatabox/screens/mini_screens/tabs/tab.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:just_audio/just_audio.dart';
@@ -241,10 +243,10 @@ class HomeScreen extends StatelessWidget {
                                                       color: Colors.blueGrey),
                                                 ),
                                                 trailing: FavOrPlayMenuButton(
-                                                    songFavorite:
-                                                        startSong[index],
-                                                    findex: index),
-                                                onTap: () {
+                                                   songFavorite:
+                                                       startSong[index],
+                                                   findex: index),
+                                                onTap: ()async {
                                                   GetAllSongController
                                                       .audioPlayer
                                                       .setAudioSource(
@@ -254,6 +256,7 @@ class HomeScreen extends StatelessWidget {
                                                                       .data!),
                                                           initialIndex:
                                                               index);
+                                                        context.read<LyricsProvider>().callLyricsApiService(items.data![index].artist??"",items.data![index].title);
 
                                                   context
                                                       .read<
@@ -263,7 +266,7 @@ class HomeScreen extends StatelessWidget {
                                                   Navigator.push(context,
                                                       MaterialPageRoute(
                                                           builder: (context) {
-                                                    return NowPlayingScreen(
+                                                    return NowPlayingTab(
                                                       songModelList:
                                                           items.data!,
                                                       count:

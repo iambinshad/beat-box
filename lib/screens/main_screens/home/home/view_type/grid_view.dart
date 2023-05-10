@@ -1,12 +1,13 @@
 
 import 'package:beatabox/controller/get_all_song_controller.dart';
 import 'package:beatabox/screens/main_screens/home/home/home_screen.dart';
+import 'package:beatabox/screens/mini_screens/tabs/tab.dart';
 import 'package:flutter/material.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../../provider/songmodel_provider.dart';
-import '../../../../mini_screens/now_playing_screen.dart';
+import '../../../../mini_screens/tabs/now_playing_screen.dart';
 import '../../menu_button.dart';
 
 class GridViewType extends StatelessWidget {
@@ -36,7 +37,7 @@ class GridViewType extends StatelessWidget {
                   initialIndex: index);
               Navigator.push(context, MaterialPageRoute(
                 builder: (context) {
-                  return NowPlayingScreen(
+                  return NowPlayingTab(
                     songModelList: items.data!,
                     count: items.data!.length,
                   );

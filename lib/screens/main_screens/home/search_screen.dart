@@ -1,5 +1,6 @@
 import 'package:beatabox/provider/home_page_provider/search_provider.dart';
-import 'package:beatabox/screens/mini_screens/now_playing_screen.dart';
+import 'package:beatabox/screens/mini_screens/tabs/now_playing_screen.dart';
+import 'package:beatabox/screens/mini_screens/tabs/tab.dart';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:on_audio_query/on_audio_query.dart';
@@ -118,7 +119,7 @@ var searchProvider = Provider.of<SearchProvider>(context);
                                         .setId(searchProvider.foundSongs[index].id);
                                     Navigator.push(context,
                                         MaterialPageRoute(builder: (context) {
-                                      return NowPlayingScreen(
+                                      return NowPlayingTab(
                                         songModelList: searchProvider.foundSongs,
                                       );
                                     }));
