@@ -119,7 +119,7 @@ var searchProvider = Provider.of<SearchProvider>(context);
                                         .setId(searchProvider.foundSongs[index].id);
                                     Navigator.push(context,
                                         MaterialPageRoute(builder: (context) {
-                                      return NowPlayingTab(
+                                      return NowPlayingScreen(
                                         songModelList: searchProvider.foundSongs,
                                       );
                                     }));

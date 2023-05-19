@@ -1,25 +1,25 @@
 import 'package:beatabox/controller/get_all_song_controller.dart';
-import 'package:beatabox/screens/mini_screens/tabs/now_playing_screen.dart';
-import 'package:beatabox/screens/mini_screens/tabs/tab.dart';
 import 'package:flutter/material.dart';
 import 'package:text_scroll/text_scroll.dart';
 
 class MiniPlayer extends StatefulWidget {
-  MiniPlayer({
+  const MiniPlayer({
     Key? key,
+    required this.openContainer,
   }) : super(key: key);
+  final VoidCallback openContainer;
+
   @override
   State<MiniPlayer> createState() => _MiniPlayerState();
 }
 
 bool firstSong = false;
-
 bool isPlaying = false;
 
 class _MiniPlayerState extends State<MiniPlayer> {
   void initState() {
     GetAllSongController.audioPlayer.currentIndexStream.listen((index) {
-      if (index != null && mounted) {
+      if (index != null) {
         setState(() {
           index == 0 ? firstSong = true : firstSong = false;
         });
@@ -33,23 +33,18 @@ class _MiniPlayerState extends State<MiniPlayer> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return GestureDetector(
-      onTap: () {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) =>
-                  NowPlayingTab(songModelList: GetAllSongController.playingSong!),
-            ));
-      },
+      onTap: () => widget.openContainer,
       child: Align(
         alignment: Alignment.bottomCenter,
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Container(
             decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: Colors.purpleAccent, width: 2),
-                color: const Color.fromARGB(255, 2, 3, 61)),
+                borderRadius: BorderRadius.circular(25),
+                border: Border.all(
+                  color: const Color.fromARGB(255, 111, 111, 193),
+                ),
+                color: Colors.black87),
             height: 60,
             child: Stack(
               children: [
@@ -65,58 +60,58 @@ class _MiniPlayerState extends State<MiniPlayer> {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                // StreamBuilder<bool>(
-                                //   stream: GetAllSongController
-                                //       .audioPlayer.playingStream,
-                                //   builder: (context, snapshot) {
-                                //     bool? playingStage = snapshot.data;
-                                //     if (playingStage != null && playingStage) {
-                                //       return TextScroll(
-                                //         GetAllSongController
-                                //             .playingSong[GetAllSongController
-                                //                 .audioPlayer.currentIndex!]
-                                //             .displayNameWOExt,
-                                //         textAlign: TextAlign.center,
-                                //         style: const TextStyle(
-                                //             color: Colors.white,
-                                //             fontFamily: 'poppins',
-                                //             fontSize: 14),
-                                //       );
-                                //     } else {
-                                //       return Text(
-                                //         GetAllSongController
-                                //             .playingSong[GetAllSongController
-                                //                 .audioPlayer.currentIndex!]
-                                //             .displayNameWOExt,
-                                //         textAlign: TextAlign.center,
-                                //         style: const TextStyle(
-                                //             overflow: TextOverflow.ellipsis,
-                                //             color: Colors.white,
-                                //             fontFamily: 'poppins',
-                                //             fontSize: 14),
-                                //       );
-                                //     }
-                                //   },
-                                // ),
-                                // TextScroll(
-                                //   GetAllSongController
-                                //               .playingSong[GetAllSongController
-                                //                   .audioPlayer.currentIndex!]
-                                //               .artist
-                                //               .toString() ==
-                                //           "<unknown>"
-                                //       ? "Unknown Artist"
-                                //       : GetAllSongController
-                                //           .playingSong[GetAllSongController
-                                //               .audioPlayer.currentIndex!]
-                                //           .artist
-                                //           .toString(),
-                                //   style: const TextStyle(
-                                //       fontFamily: 'poppins',
-                                //       fontSize: 10,
-                                //       color: Colors.blueGrey),
-                                //   mode: TextScrollMode.endless,
-                                // ),
+                                StreamBuilder<bool>(
+                                  stream: GetAllSongController
+                                      .audioPlayer.playingStream,
+                                  builder: (context, snapshot) {
+                                    bool? playingStage = snapshot.data;
+                                    if (playingStage != null && playingStage) {
+                                      return TextScroll(
+                                        GetAllSongController
+                                            .playingSong![GetAllSongController
+                                                .audioPlayer.currentIndex!]
+                                            .displayNameWOExt,
+                                        textAlign: TextAlign.center,
+                                        style: const TextStyle(
+                                            color: Colors.white,
+                                            fontFamily: 'poppins',
+                                            fontSize: 14),
+                                      );
+                                    } else {
+                                      return Text(
+                                        GetAllSongController
+                                            .playingSong![GetAllSongController
+                                                .audioPlayer.currentIndex!]
+                                            .displayNameWOExt,
+                                        textAlign: TextAlign.center,
+                                        style: const TextStyle(
+                                            overflow: TextOverflow.ellipsis,
+                                            color: Colors.white,
+                                            fontFamily: 'poppins',
+                                            fontSize: 14),
+                                      );
+                                    }
+                                  },
+                                ),
+                                TextScroll(
+                                  GetAllSongController
+                                              .playingSong![GetAllSongController
+                                                  .audioPlayer.currentIndex!]
+                                              .artist
+                                              .toString() ==
+                                          "<unknown>"
+                                      ? "Unknown Artist"
+                                      : GetAllSongController
+                                          .playingSong![GetAllSongController
+                                              .audioPlayer.currentIndex!]
+                                          .artist
+                                          .toString(),
+                                  style: const TextStyle(
+                                      fontFamily: 'poppins',
+                                      fontSize: 10,
+                                      color: Colors.blueGrey),
+                                  mode: TextScrollMode.endless,
+                                ),
                               ],
                             ),
                           ),
@@ -127,11 +122,6 @@ class _MiniPlayerState extends State<MiniPlayer> {
                               : IconButton(
                                   iconSize: 32,
                                   onPressed: () async {
-                                    // GetRecentSongController.addRecentlyPlayed(
-                                    //     GetAllSongController
-                                    //         .playingSong[GetAllSongController
-                                    //             .audioPlayer.currentIndex!]
-                                    //         .id);
                                     if (GetAllSongController
                                         .audioPlayer.hasPrevious) {
                                       await GetAllSongController.audioPlayer
@@ -144,7 +134,10 @@ class _MiniPlayerState extends State<MiniPlayer> {
                                     }
                                   },
                                   icon: const Icon(Icons.skip_previous),
-                                  color: Colors.white,
+                                  color: GetAllSongController
+                                          .audioPlayer.hasPrevious
+                                      ? Colors.white
+                                      : const Color.fromARGB(255, 94, 51, 51),
                                 ),
                           ElevatedButton(
                             style: ElevatedButton.styleFrom(
@@ -187,11 +180,6 @@ class _MiniPlayerState extends State<MiniPlayer> {
                           IconButton(
                             iconSize: 35,
                             onPressed: () async {
-                              // GetRecentSongController.addRecentlyPlayed(
-                              //     GetAllSongController
-                              //         .playingSong[GetAllSongController
-                              //             .audioPlayer.currentIndex!]
-                              //         .id);
                               if (GetAllSongController.audioPlayer.hasNext) {
                                 await GetAllSongController.audioPlayer
                                     .seekToNext();
@@ -204,7 +192,9 @@ class _MiniPlayerState extends State<MiniPlayer> {
                               Icons.skip_next,
                               size: 32,
                             ),
-                            color: Colors.white,
+                            color: GetAllSongController.audioPlayer.hasNext
+                                ? Colors.white
+                                : const Color.fromARGB(255, 96, 96, 96),
                           )
                         ]),
                   ),

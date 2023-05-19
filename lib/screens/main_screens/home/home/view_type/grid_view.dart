@@ -1,8 +1,9 @@
-
 import 'package:beatabox/controller/get_all_song_controller.dart';
+import 'package:beatabox/provider/lyrics_provider.dart';
 import 'package:beatabox/screens/main_screens/home/home/home_screen.dart';
 import 'package:beatabox/screens/mini_screens/tabs/tab.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:provider/provider.dart';
 
@@ -31,13 +32,17 @@ class GridViewType extends StatelessWidget {
           return GestureDetector(
             onTap: () {
               // playSong(item.data![index].uri);
+              context.read<LyricsProvider>().callLyricsApiService(
+                  items.data![index].artist ?? "", items.data![index].title);
+
               context.read<SongModelProvider>().setId(items.data![index].id);
               GetAllSongController.audioPlayer.setAudioSource(
                   GetAllSongController.createSongList(items.data!),
                   initialIndex: index);
+
               Navigator.push(context, MaterialPageRoute(
                 builder: (context) {
-                  return NowPlayingTab(
+                  return NowPlayingScreen(
                     songModelList: items.data!,
                     count: items.data!.length,
                   );
@@ -91,10 +96,15 @@ class GridViewType extends StatelessWidget {
                     ),
                   ),
                   child: QueryArtworkWidget(
-                    artworkFit: BoxFit.fitHeight,
+                    errorBuilder: (p0, p1, p2) {
+                      return const CircularProgressIndicator();
+                    },
+                    artworkWidth: 100,
+                    artworkHeight: 100,
+                    artworkFit: BoxFit.fill,
                     nullArtworkWidget: Image.asset(
                       'assets/home_screen/Premium_Photo___Headphones_on_dark_black_background-removebg-preview.png',
-                      fit: BoxFit.fitHeight,
+                  
                     ),
                     id: items.data![index].id,
                     type: ArtworkType.AUDIO,
@@ -106,4 +116,3 @@ class GridViewType extends StatelessWidget {
         }));
   }
 }
-

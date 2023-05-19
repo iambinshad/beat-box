@@ -1,9 +1,11 @@
+import 'package:animations/animations.dart';
 import 'package:beatabox/controller/bottom_nav_controller.dart';
 import 'package:beatabox/controller/get_all_song_controller.dart';
 import 'package:beatabox/database/fav_db.dart';
 import 'package:beatabox/provider/bottom_nav_provider/bottom_nav_provider.dart';
 import 'package:beatabox/screens/main_screens/playlist/playlist_screen.dart';
 import 'package:beatabox/screens/mini_screens/min_player.dart';
+import 'package:beatabox/screens/mini_screens/tabs/now_playing_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/src/simple/get_state.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
@@ -14,9 +16,9 @@ import 'home/home/home_screen.dart';
 import 'settings/settings_screen.dart';
 
 class BottomNavScreen extends StatelessWidget {
-   BottomNavScreen({super.key});
+  BottomNavScreen({super.key});
 
-  final pages =  [
+  final pages = [
     HomeScreen(),
     const FavouriteScreen(),
     const PlaylistScreen(),
@@ -27,34 +29,41 @@ class BottomNavScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     var bottomProv = Provider.of<BottomNavProv>(context);
     return Scaffold(
-      
       backgroundColor: Colors.transparent,
       // body: SafeArea(
       //   child:Consumer<BottomNavProv>(builder: (context, value, child) => pages[value.currentSelectedIndex],)
       // ),
-      body: Consumer3<FavoriteDb,BottomNavProv,BottomNavController>(
-         builder: (context, value,value2,value3, child) => Stack(
-              children: [
-                pages[value2.currentSelectedIndex],
-                Positioned(
-                    bottom: 0,
-                    child: Column(
-                      children: [
-                        GetAllSongController.audioPlayer.currentIndex !=
-                            null?
-                          Column(
+      body: Consumer3<FavoriteDb, BottomNavProv, BottomNavController>(
+        builder: (context, value, value2, value3, child) => Stack(
+          children: [
+            pages[value2.currentSelectedIndex],
+            Positioned(
+                bottom: 0,
+                child: Column(
+                  children: [
+                    GetAllSongController.audioPlayer.currentIndex != null
+                        ? Column(
                             children: [
-                              MiniPlayer(),
+                              OpenContainer(
+                                  closedColor: Colors.transparent,
+                                  transitionDuration:
+                                      const Duration(milliseconds: 800),
+                                  openBuilder: (context, _) => NowPlayingScreen(
+                                      songModelList:
+                                          GetAllSongController.playingSong!),
+                                  closedBuilder: (context,
+                                          VoidCallback openContainer) =>
+                                      MiniPlayer(openContainer: openContainer)),
                             ],
                           )
-                        :
-                          const SizedBox(),
-                      ],
-                    ))
-              ],
-            ),),
+                        : const SizedBox(),
+                  ],
+                ))
+          ],
+        ),
+      ),
       bottomNavigationBar: Padding(
-        padding: const EdgeInsets.all(13.0),
+        padding: const EdgeInsets.all(10.0),
         child: Container(
           decoration: BoxDecoration(
               // border: Border.all(color: Colors.deepPurple, width: 2),

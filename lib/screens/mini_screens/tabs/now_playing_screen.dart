@@ -1,7 +1,15 @@
 import 'dart:developer';
 import 'package:beatabox/controller/get_all_song_controller.dart';
 import 'package:beatabox/model/fav_model.dart';
+import 'package:beatabox/provider/lyrics_provider.dart';
 import 'package:beatabox/provider/now_playing_provider/now_playing_pro.dart';
+import 'package:beatabox/provider/onboarding_provider/onboarding.dart';
+import 'package:beatabox/provider/songmodel_provider.dart';
+import 'package:beatabox/screens/mini_screens/tabs/container_1.dart';
+import 'package:beatabox/screens/mini_screens/tabs/container_2.dart';
+import 'package:beatabox/screens/mini_screens/tabs/image_page.dart';
+import 'package:beatabox/screens/mini_screens/tabs/lyrics.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:just_audio/just_audio.dart';
@@ -31,22 +39,26 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
   List<AudioSource> songList = [];
   bool _lastSong = false;
   int currentIndex = 0;
+  int slidingControllerIndex = 0;
   int large = 0;
+  final PageController _controller = PageController();
+  RestorableInt currentSegment = RestorableInt(0);
 
   @override
   void initState() {
     GetAllSongController.audioPlayer.currentIndexStream.listen((index) {
       if (index != null) {
         GetAllSongController.currentIndexes = index;
-        
-         if(mounted){ setState(() {
+
+        if (mounted) {
+          setState(() {
             large = widget.count - 1;
 
             currentIndex = index;
             index == 0 ? _firstsong = true : _firstsong = false;
             index == large ? _lastSong = true : _lastSong = false;
-          });}
-        
+          });
+        }
 
         log('index of last song ${widget.count}');
       }
@@ -55,6 +67,17 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
 
     playSong();
   }
+
+  final children = <int, Widget>{
+    0: const Text(
+      "Music",
+      style: TextStyle(color: Colors.white),
+    ),
+    1: const Text(
+      "Lyrics",
+      style: TextStyle(color: Colors.white),
+    ),
+  };
 
   String _formatDuration(Duration? duration) {
     if (duration == null) {
@@ -70,6 +93,8 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
   @override
   Widget build(BuildContext context) {
     final playListPro = Provider.of<PlaylistDb>(context);
+    final height = MediaQuery.of(context).size.height;
+    final width = MediaQuery.of(context).size.width;
     return Container(
       decoration: const BoxDecoration(
           gradient: LinearGradient(
@@ -79,37 +104,100 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
         ],
       )),
       child: Scaffold(
+          appBar: AppBar(
+            centerTitle: true,
+            title:SizedBox(
+                  width: 200,
+                  child: Padding(
+                    padding: EdgeInsets.all(16),
+                    child: CupertinoSlidingSegmentedControl<int>(
+                      children: children,
+                      thumbColor: Colors.white24,
+                      onValueChanged: (value) {
+                        setState(() {
+                          slidingControllerIndex = value!;
+                          _controller.animateToPage(
+                            value,
+                            duration: Duration(milliseconds: 300),
+                            curve: Curves.easeInOut,
+                          );
+                        });
+                      },
+                      groupValue: slidingControllerIndex,
+                    ),
+                  ),
+                ),
+            
+            //  const Text(
+            //   "NOW PLAYING",
+            //   style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            // ),
+            elevation: 0.0,
+            backgroundColor: Colors.transparent,
+            leading: IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: const Icon(
+                Icons.keyboard_arrow_down_rounded,
+                size: 34,
+              ),
+            ),
+          ),
           backgroundColor: Colors.transparent,
           body: SafeArea(
-            child: SingleChildScrollView(
-              child: Stack(
-                children: [
-                  Column(
+            child: Column(
+              children: [
+                SizedBox(height: 50,),
+                // SizedBox(
+                //   width: 200,
+                //   child: Padding(
+                //     padding: EdgeInsets.all(16),
+                //     child: CupertinoSlidingSegmentedControl<int>(
+                //       children: children,
+                //       thumbColor: Colors.white24,
+                //       onValueChanged: (value) {
+                //         setState(() {
+                //           slidingControllerIndex = value!;
+                //           // _controller.animateToPage(
+                //           //   value,
+                //           //   duration: Duration(milliseconds: 300),
+                //           //   curve: Curves.easeInOut,
+                //           // );
+                //         });
+                //       },
+                //       groupValue: slidingControllerIndex,
+                //     ),
+                //   ),
+                // ),
+                Expanded(
+                  flex: 1,
+                  child: SizedBox(
+                    height: 300,
+                    width: double.infinity,
+                    child: Consumer<NowProvider>(
+                      builder: (context, value, child) {
+                        return PageView(
+                          controller: _controller,
+                          onPageChanged: (value) {
+                            setState(() {
+                              slidingControllerIndex=value;
+                            });
+                            context.read<LyricsProvider>().callLyricsApiService(widget.songModelList[currentIndex].artist??"", widget.songModelList[currentIndex].displayNameWOExt);
+                          },
+                          children: const [
+                            NowPlayingImagePage(),
+                            LyricsScreen(),
+                          ],
+                        );
+                      },
+                    ),
+                  ),
+                ),
+                Expanded(
+                  flex: 1,
+                  child: Column(
                     children: [
-                      const SizedBox(
-                        height: 50,
-                      ),
-                      Stack(
-                        children: [
-                          const Positioned(
-                            height: 300,
-                            width: 300,
-                            child: ArtWorkWidget(),
-                          ),
-                          Opacity(
-                            opacity: 0.2,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(45),
-                                color: Colors.grey,
-                              ),
-                              height: 300,
-                              width: 300,
-                            ),
-                          )
-                        ],
-                      ),
-                      //
                       const SizedBox(
                         height: 50,
                       ),
@@ -218,10 +306,8 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
                                           max: value.duration.inSeconds
                                               .toDouble(),
                                           onChanged: (value) {
-                                            if (mounted) {
-                                              values.ChangeToSeconds(
-                                                  value.toInt());
-                                            }
+                                            values.ChangeToSeconds(
+                                                value.toInt());
                                           },
                                         ),
                                       ),
@@ -237,7 +323,6 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
                           ),
                         ),
                       ),
-
                       const SizedBox(
                         height: 20,
                       ),
@@ -285,11 +370,13 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
                               : IconButton(
                                   iconSize: 40,
                                   onPressed: () {
+                                  // context.read<LyricsProvider>().callLyricsApiService(widget.songModelList[currentIndex].artist??"", widget.songModelList[currentIndex].displayNameWOExt);
                                     if (GetAllSongController
                                         .audioPlayer.hasPrevious) {
                                       GetAllSongController.audioPlayer
                                           .seekToPrevious();
                                     }
+
                                   },
                                   icon: const Icon(
                                     Icons.skip_previous_outlined,
@@ -346,7 +433,9 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
                                   ))
                               : IconButton(
                                   iconSize: 40,
-                                  onPressed: () {
+                                  onPressed: ()async {
+                                    //  context.watch<LyricsProvider>().changeIsLoading(true);
+                                    // // context.read<LyricsProvider>().callLyricsApiService(widget.songModelList[currentIndex].artist??"", widget.songModelList[currentIndex].displayNameWOExt);
                                     if (GetAllSongController
                                         .audioPlayer.hasNext) {
                                       GetAllSongController.audioPlayer
@@ -384,11 +473,11 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
                             ),
                           ),
                         ],
-                      )
+                      ),
                     ],
                   ),
-                ],
-              ),
+                )
+              ],
             ),
           )),
     );
@@ -652,16 +741,22 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
   void playSong() {
     GetAllSongController.audioPlayer.play();
     GetAllSongController.audioPlayer.durationStream.listen((d) {
-      // setState(() {
-      //   _duration = d!;
-      // });
-      context.read<NowProvider>().setDuration(d);
+
+        context.read<NowProvider>().setDuration(d);
+  
     });
     GetAllSongController.audioPlayer.positionStream.listen((p) {
-      // setState(() {
-      //   _position = p;
-      // });
-      context.read<NowProvider>().setPostion(p);
+
+      if (mounted) {
+        context.read<NowProvider>().setPostion(p);
+      }
     });
+  }
+
+  void image() {
+    QueryArtworkWidget(
+      id: context.read<SongModelProvider>().id,
+      type: ArtworkType.AUDIO,
+    );
   }
 }

@@ -220,7 +220,7 @@ class PlaylistSongs extends StatelessWidget {
                                                   Navigator.push(context,
                                                       MaterialPageRoute(
                                                           builder: (context) {
-                                                    return NowPlayingTab(
+                                                    return NowPlayingScreen(
                                                       songModelList:
                                                           songPlaylist,
                                                       count:

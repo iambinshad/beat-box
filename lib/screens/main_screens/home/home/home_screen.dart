@@ -266,7 +266,7 @@ class HomeScreen extends StatelessWidget {
                                                   Navigator.push(context,
                                                       MaterialPageRoute(
                                                           builder: (context) {
-                                                    return NowPlayingTab(
+                                                    return NowPlayingScreen(
                                                       songModelList:
                                                           items.data!,
                                                       count:

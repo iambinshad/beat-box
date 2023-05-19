@@ -174,7 +174,7 @@ class FavouriteScreen extends StatelessWidget {
                                                         context,
                                                         MaterialPageRoute(
                                                           builder: (context) =>
-                                                              NowPlayingTab(
+                                                              NowPlayingScreen(
                                                                   songModelList:
                                                                       favoriteList),
                                                         ));

@@ -1,7 +1,5 @@
 import 'package:beatabox/provider/lyrics_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:provider/provider.dart';
 
 class LyricsScreen extends StatelessWidget {
@@ -9,40 +7,37 @@ class LyricsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  Container(
-       decoration: const BoxDecoration(
-          gradient: LinearGradient(
-        colors: [
-          Colors.deepPurple,
-          Color.fromARGB(255, 61, 43, 128),
-        ],
-      )),
-      child: Scaffold(
-      backgroundColor: Colors.transparent,
- 
-      body: Container(
-        padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 24.0),
-        child: Consumer<LyricsProvider>(
-          builder: (context, value, child) => 
-           SingleChildScrollView(
-            child:  Card(
-              child: Center(child:value.allData?.message?.body?.lyrics?.lyricsBody!=null?Text(value.allData!.message!.body!.lyrics!.lyricsBody.toString().replaceAll("******* This Lyrics is NOT for Commercial use *******", ""),style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 18.0,
-                  letterSpacing: 1.0,
-                  height: 1.5),):const Text("Lyrics Not Found!"),
-              ),
-            ),
-            // child: Text(
-            //   lyrics,
-            //   style: 
-              ),
-        ),
-          ),
-        ),
-      );
-    
-
-    
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
+      child: Consumer<LyricsProvider>(
+        builder: (context, value, child) => SingleChildScrollView(
+            child: value.allData?.message?.body?.lyrics?.lyricsBody != null
+                ? Container(
+                    decoration:
+                        BoxDecoration(borderRadius: BorderRadius.circular(7)),
+                    child: Padding(
+                      padding: const EdgeInsets.all(5.0),
+                      child: Text(
+                        value.allData!.message!.body!.lyrics!.lyricsBody
+                            .toString()
+                            .replaceAll(
+                                "******* This Lyrics is NOT for Commercial use *******",
+                                ""),
+                        style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 24.0,
+                            wordSpacing: 3,
+                            letterSpacing: 1.3,
+                            height: 1.5),
+                      ),
+                    ),
+                  )
+                : Center(
+                    child: context.watch<LyricsProvider>().isLoading == true
+                        ? const CircularProgressIndicator()
+                        : const Text("Lyrics Not Found!",style: TextStyle(color: Colors.white),),
+                  )),
+      ),
+    );
   }
 }
