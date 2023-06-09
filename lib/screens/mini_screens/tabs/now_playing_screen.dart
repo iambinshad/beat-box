@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'package:beatabox/controller/get_all_song_controller.dart';
 import 'package:beatabox/model/fav_model.dart';
+import 'package:beatabox/provider/bottom_nav_provider/bottom_nav_provider.dart';
 import 'package:beatabox/provider/lyrics_provider.dart';
 import 'package:beatabox/provider/now_playing_provider/now_playing_pro.dart';
 import 'package:beatabox/provider/onboarding_provider/onboarding.dart';
@@ -136,6 +137,7 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
             backgroundColor: Colors.transparent,
             leading: IconButton(
               onPressed: () {
+                Provider.of<BottomNavProv>(context,listen: false).reload();
                 Navigator.pop(context);
               },
               icon: const Icon(

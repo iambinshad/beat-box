@@ -23,91 +23,93 @@ class SettingsScreen extends StatelessWidget {
         Colors.deepPurple,
         Colors.black,
       ], begin: Alignment.topCenter, end: Alignment.bottomCenter)),
-      child: Scaffold(
-          backgroundColor: Colors.transparent,
-          body: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              children: [
-                const Text(
-                  'Settings',
-                  style: TextStyle(
-                      overflow: TextOverflow.ellipsis,
-                      fontFamily: 'poppins',
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.w600),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                InkWell(
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const AboutScreen(),
-                        ));
-                  },
-                  child: const ListSettings(
-                    titleText: 'About BeatBox',
-                    yourIcon: Icons.info_outline,
+      child: SafeArea(
+        child: Scaffold(
+            backgroundColor: Colors.transparent,
+            body: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                children: [
+                  const Text(
+                    'Settings',
+                    style: TextStyle(
+                        overflow: TextOverflow.ellipsis,
+                        fontFamily: 'poppins',
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w800),
                   ),
-                ),
-                InkWell(
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const PrivacyPolicyScreen(),
-                        ));
-                  },
-                  child: const ListSettings(
-                    titleText: 'Privacy Policy',
-                    yourIcon: Icons.privacy_tip_outlined,
+                  const SizedBox(
+                    height: 10,
                   ),
-                ),
-                InkWell(
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const TermsAndConditionScreen(),
-                        ));
-                  },
-                  child: const ListSettings(
-                    titleText: 'Terms and Conditions',
-                    yourIcon: Icons.gavel_rounded,
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const AboutScreen(),
+                          ));
+                    },
+                    child: const ListSettings(
+                      titleText: 'About BeatBox',
+                      yourIcon: Icons.info_outline,
+                    ),
                   ),
-                ),
-                InkWell(
-                  onTap: () {
-                    resetalert(context);
-                  },
-                  child: const ListSettings(
-                      titleText: 'Reset', yourIcon: (Icons.restore)),
-                ),
-                GestureDetector(
-                  onTap: () async {
-                    await Share.share(
-                        'hey! check out this new app https://play.google.com/store/search?q=music%20application&c=apps');
-                  },
-                  child: const ListSettings(
-                    titleText: 'Share BeatBox',
-                    yourIcon: Icons.share_outlined,
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const PrivacyPolicyScreen(),
+                          ));
+                    },
+                    child: const ListSettings(
+                      titleText: 'Privacy Policy',
+                      yourIcon: Icons.privacy_tip_outlined,
+                    ),
                   ),
-                ),
-                 SizedBox(
-                  height: height/4,
-                ),
-                const Center(
-                    child: Text(
-                  'Version 1.0',
-                  style: TextStyle(color: Colors.grey),
-                )),
-              ],
-            ),
-          )),
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const TermsAndConditionScreen(),
+                          ));
+                    },
+                    child: const ListSettings(
+                      titleText: 'Terms and Conditions',
+                      yourIcon: Icons.gavel_rounded,
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      resetalert(context);
+                    },
+                    child: const ListSettings(
+                        titleText: 'Reset', yourIcon: (Icons.restore)),
+                  ),
+                  GestureDetector(
+                    onTap: () async {
+                      await Share.share(
+                          'hey! check out this new app https://play.google.com/store/search?q=music%20application&c=apps');
+                    },
+                    child: const ListSettings(
+                      titleText: 'Share BeatBox',
+                      yourIcon: Icons.share_outlined,
+                    ),
+                  ),
+                   SizedBox(
+                    height: height/4,
+                  ),
+                  const Center(
+                      child: Text(
+                    'Version 2.0.0',
+                    style: TextStyle(color: Colors.grey),
+                  )),
+                ],
+              ),
+            )),
+      ),
     );
   }
 
@@ -136,14 +138,10 @@ class SettingsScreen extends StatelessWidget {
             ElevatedButton(
                 onPressed: () async {
                   final sharedprifes = await SharedPreferences.getInstance();
-                  sharedprifes.clear();
-
-                  // final musicDb = Hive.openBox<FavModel>('FavoriteDB');
-                  Provider.of<FavoriteDb>(context).clear();
-
+                  await sharedprifes.clear();                  
+                  Provider.of<FavoriteDb>(context,listen: false).clear();
                   final playlistDb = Hive.box<FavModel>('playlistDb');
-                  playlistDb.clear();
-
+                 await playlistDb.clear();
                   // ignore: use_build_context_synchronously
                   Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
                     builder: (context) {

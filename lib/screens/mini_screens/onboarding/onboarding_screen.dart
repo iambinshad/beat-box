@@ -1,17 +1,28 @@
 import 'package:beatabox/provider/onboarding_provider/onboarding.dart';
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import 'package:permission_handler/permission_handler.dart';
 import '../../main_screens/bottom_nav.dart';
 import 'onboarding_pages/intro_page1.dart';
 import 'onboarding_pages/intro_page2.dart';
 import 'onboarding_pages/intro_page3.dart';
 
-class OnBoardingScreen extends StatelessWidget {
+class OnBoardingScreen extends StatefulWidget {
    OnBoardingScreen({super.key});
 
+  @override
+  State<OnBoardingScreen> createState() => _OnBoardingScreenState();
+}
+
+class _OnBoardingScreenState extends State<OnBoardingScreen> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    reqeustStoragePermission();
+  }
   int? enter = 0;
 
   final PageController _controller = PageController();
@@ -54,6 +65,7 @@ class OnBoardingScreen extends StatelessWidget {
                                 child: GestureDetector(
                               onTap: () {
                                 _controller.jumpToPage(2);
+                                 
                               },
                               child: const Text(
                                 'skip',
@@ -78,7 +90,7 @@ class OnBoardingScreen extends StatelessWidget {
                                 return GestureDetector(
                                   onTap: () {
                                     value.entryCounting();
-                                    reqeustStoragePermission();
+                                   
 
                                     Navigator.pushAndRemoveUntil(context,
                                         MaterialPageRoute(builder: (context) {
@@ -155,14 +167,14 @@ class OnBoardingScreen extends StatelessWidget {
     );
   }
 
-  Future<void> reqeustStoragePermission() async {
-    Permission.storage.request();
-  }
-
   Future<void> saveEnterCountTosharedPrference() async {
     //Shared Preference
     final sharedprefs = await SharedPreferences.getInstance();
     //save enterence
     await sharedprefs.setInt('enterCount', enter!);
+  }
+
+  Future<void> reqeustStoragePermission() async {
+    Permission.storage.request();
   }
 }

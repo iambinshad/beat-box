@@ -7,4 +7,7 @@ class BottomNavProv extends ChangeNotifier {
     currentSelectedIndex = index;
     notifyListeners();
   }
+  void reload(){
+    notifyListeners();
+  }
 }

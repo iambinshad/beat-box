@@ -9,6 +9,8 @@ import 'package:beatabox/screens/mini_screens/tabs/tab.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:permission_handler/permission_handler.dart';
+
 import 'package:on_audio_query/on_audio_query.dart';
 
 import 'package:provider/provider.dart';
@@ -18,11 +20,29 @@ import '../../../../database/fav_db.dart';
 import '../../../../provider/songmodel_provider.dart';
 import '../menu_button.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   HomeScreen({super.key});
 
-  final OnAudioQuery _audioQuery = OnAudioQuery();
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
 
+class _HomeScreenState extends State<HomeScreen> {
+  final OnAudioQuery _audioQuery = OnAudioQuery();
+// Future<List<SongModel>> fetchMusicFiles() async {
+//   OnAudioQuery audioQuery = OnAudioQuery();
+
+//   List<SongModel> songs = await audioQuery.querySongs();
+
+//   // Filter and return only music files
+//   List<SongModel> musicFiles = songs
+//       .where((song) =>
+//           song.isMusic! &&
+//           song.title.isNotEmpty &&
+//           song.displayName.toLowerCase().endsWith('.mp3'))
+//       .toList();
+//   return musicFiles;
+// }
   final AudioPlayer _audioPlayer = AudioPlayer();
 
   List<SongModel> allSongs = [];
@@ -91,30 +111,14 @@ class HomeScreen extends StatelessWidget {
               ],
               automaticallyImplyLeading: false,
               centerTitle: true,
-              title: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Stack(
-                    children: [
-                      Positioned(
-                          top: -5,
-                          left: 75,
-                          child: Image.asset(
-                            'assets/home_screen/Premium_Photo___Headphones_on_dark_black_background-removebg-preview.png',
-                            height: 40,
-                          )),
-                      const Text(
-                        'BEATB     X',
-                        style: TextStyle(
-                          color: Colors.white,
+              title: const Text(
+                        'BEATBOX',
+                        style:  TextStyle(
+                          color:Colors.white,
                           fontSize: 30,
                           fontWeight: FontWeight.w600,
                         ),
-                      ),
-                    ],
-                  )
-                ],
-              ),
+                      ), 
               elevation: 0,
               backgroundColor: Colors.transparent,
             ),
@@ -130,10 +134,10 @@ class HomeScreen extends StatelessWidget {
                     Expanded(
                       child: Container(
                           alignment: Alignment.bottomCenter,
-                          // color: Colors.white,
                           height: 550,
                           width: double.infinity,
                           child: FutureBuilder<List<SongModel>>(
+                          
                               future: _audioQuery.querySongs(
                                   sortType: null,
                                   orderType: OrderType.ASC_OR_SMALLER,
@@ -178,109 +182,78 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
+
+
   ListView listViewType(AsyncSnapshot<List<SongModel>> items) {
     return ListView.builder(
-                                      itemBuilder: ((context, index) {
-                                        allSongs.addAll(items.data!);
-                                        return Padding(
-                                          padding: const EdgeInsets.only(
-                                              left: 6, right: 6),
-                                          child: Padding(
-                                            padding:
-                                                const EdgeInsets.all(7.0),
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          30),
-                                                  border: Border.all(
-                                                    color:
-                                                        const Color.fromARGB(
-                                                            255,
-                                                            111,
-                                                            111,
-                                                            193),
-                                                  ),
-                                                  color: Colors.black12),
-                                              child: ListTile(
-                                                iconColor: Colors.white,
-                                                selectedColor:
-                                                    Colors.purpleAccent,
-                                                leading: QueryArtworkWidget(
-                                                    id: items.data![index].id,
-                                                    type: ArtworkType.AUDIO,
-                                                    nullArtworkWidget:
-                                                        const CircleAvatar(
-                                                            backgroundColor:
-                                                                Colors
-                                                                    .transparent,
-                                                            radius: 27,
-                                                            backgroundImage:
-                                                                AssetImage(
-                                                                    'assets/home_screen/Premium_Photo___Headphones_on_dark_black_background-removebg-preview.png'))),
-                                                title: Text(
-                                                  items.data![index]
-                                                      .displayNameWOExt,
-                                                  style: const TextStyle(
-                                                      overflow: TextOverflow
-                                                          .ellipsis,
-                                                      fontFamily: 'poppins',
-                                                      color: Colors.white),
-                                                ),
-                                                subtitle: Text(
-                                                  items.data![index].artist
-                                                              .toString() ==
-                                                          "<unknown>"
-                                                      ? "Unknown Artist"
-                                                      : items
-                                                          .data![index].artist
-                                                          .toString(),
-                                                  style: const TextStyle(
-                                                      overflow: TextOverflow
-                                                          .ellipsis,
-                                                      fontFamily: 'poppins',
-                                                      fontSize: 12,
-                                                      color: Colors.blueGrey),
-                                                ),
-                                                trailing: FavOrPlayMenuButton(
-                                                   songFavorite:
-                                                       startSong[index],
-                                                   findex: index),
-                                                onTap: ()async {
-                                                  GetAllSongController
-                                                      .audioPlayer
-                                                      .setAudioSource(
-                                                          GetAllSongController
-                                                              .createSongList(
-                                                                  items
-                                                                      .data!),
-                                                          initialIndex:
-                                                              index);
-                                                        context.read<LyricsProvider>().callLyricsApiService(items.data![index].artist??"",items.data![index].title);
+      itemBuilder: ((context, index) {
+        allSongs.addAll(items.data!);
+        return Padding(
+          padding: const EdgeInsets.only(left: 6, right: 6),
+          child: Padding(
+            padding: const EdgeInsets.all(7.0),
+            child: Container(
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(30),
+                  border: Border.all(
+                    color: const Color.fromARGB(255, 111, 111, 193),
+                  ),
+                  color: Colors.black12),
+              child: ListTile(
+                iconColor: Colors.white,
+                selectedColor: Colors.purpleAccent,
+                leading: QueryArtworkWidget(
+                    id: items.data![index].id,
+                    type: ArtworkType.AUDIO,
+                    nullArtworkWidget: const CircleAvatar(
+                        backgroundColor: Colors.transparent,
+                        radius: 27,
+                        backgroundImage: AssetImage(
+                            'assets/home_screen/Premium_Photo___Headphones_on_dark_black_background-removebg-preview.png'))),
+                title: Text(
+                  items.data![index].displayNameWOExt,
+                  style: const TextStyle(
+                      overflow: TextOverflow.ellipsis,
+                      fontFamily: 'poppins',
+                      color: Colors.white),
+                ),
+                subtitle: Text(
+                  items.data![index].artist.toString() == "<unknown>"
+                      ? "Unknown Artist"
+                      : items.data![index].artist.toString(),
+                  style: const TextStyle(
+                      overflow: TextOverflow.ellipsis,
+                      fontFamily: 'poppins',
+                      fontSize: 12,
+                      color: Colors.blueGrey),
+                ),
+                trailing: FavOrPlayMenuButton(
+                    songFavorite: startSong[index], findex: index),
+                onTap: () async {
+                  GetAllSongController.audioPlayer.setAudioSource(
+                      GetAllSongController.createSongList(items.data!),
+                      initialIndex: index);
+                  context.read<LyricsProvider>().callLyricsApiService(
+                      items.data![index].artist ?? "",
+                      items.data![index].title);
 
-                                                  context
-                                                      .read<
-                                                          SongModelProvider>()
-                                                      .setId(items
-                                                          .data![index].id);
-                                                  Navigator.push(context,
-                                                      MaterialPageRoute(
-                                                          builder: (context) {
-                                                    return NowPlayingScreen(
-                                                      songModelList:
-                                                          items.data!,
-                                                      count:
-                                                          items.data!.length,
-                                                    );
-                                                  }));
-                                                },
-                                              ),
-                                            ),
-                                          ),
-                                        );
-                                      }),
-                                      itemCount: items.data!.length,
-                                    );
+                  context
+                      .read<SongModelProvider>()
+                      .setId(items.data![index].id);
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return NowPlayingScreen(
+                      songModelList: items.data!,
+                      count: items.data!.length,
+                    );
+                  }));
+                },
+              ),
+            ),
+          ),
+        );
+      }),
+      itemCount: items.data!.length,
+    );
   }
 
   Future<bool> _onButtonPressed(BuildContext context) async {

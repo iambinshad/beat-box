@@ -1,13 +1,14 @@
 import 'package:beatabox/controller/get_all_song_controller.dart';
+import 'package:beatabox/screens/mini_screens/tabs/now_playing_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:text_scroll/text_scroll.dart';
 
 class MiniPlayer extends StatefulWidget {
-  const MiniPlayer({
+   MiniPlayer({
     Key? key,
-    required this.openContainer,
+   
   }) : super(key: key);
-  final VoidCallback openContainer;
+  // final VoidCallback openContainer;
 
   @override
   State<MiniPlayer> createState() => _MiniPlayerState();
@@ -33,7 +34,7 @@ class _MiniPlayerState extends State<MiniPlayer> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return GestureDetector(
-      onTap: () => widget.openContainer,
+      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => NowPlayingScreen(songModelList:GetAllSongController.playingSong!),)),
       child: Align(
         alignment: Alignment.bottomCenter,
         child: Padding(
@@ -42,9 +43,14 @@ class _MiniPlayerState extends State<MiniPlayer> {
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(25),
                 border: Border.all(
-                  color: const Color.fromARGB(255, 111, 111, 193),
+                  color:  Colors.black
                 ),
-                color: Colors.black87),
+                gradient:LinearGradient(begin: Alignment.topCenter,end: Alignment.bottomCenter, colors: [
+                  Color.fromARGB(255, 92, 53, 158),Colors.black,Color.fromARGB(255, 92, 53, 158)
+                ])
+               
+            
+                ),
             height: 60,
             child: Stack(
               children: [
@@ -55,6 +61,7 @@ class _MiniPlayerState extends State<MiniPlayer> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Container(
+
                             width: size.width * 0.5,
                             margin: const EdgeInsets.only(left: 10),
                             child: Column(

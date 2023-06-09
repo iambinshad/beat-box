@@ -1,6 +1,5 @@
 import 'package:beatabox/provider/home_page_provider/search_provider.dart';
 import 'package:beatabox/screens/mini_screens/tabs/now_playing_screen.dart';
-import 'package:beatabox/screens/mini_screens/tabs/tab.dart';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:on_audio_query/on_audio_query.dart';
@@ -19,6 +18,7 @@ class SearchScreen extends StatelessWidget {
 var searchProvider = Provider.of<SearchProvider>(context);
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       songsLoading(searchProvider);
+      Provider.of<SearchProvider>(context,listen: false).foundSongs= allsongs;
       
     });
     return Container(
@@ -151,7 +151,6 @@ var searchProvider = Provider.of<SearchProvider>(context);
     searchProvider.foundSongs = allsongs;
   }
 }
-
 List<SongModel> allsongs = [];
 final audioPlayer = AudioPlayer();
 final audioQuery = OnAudioQuery();

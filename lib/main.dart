@@ -10,11 +10,9 @@ import 'package:beatabox/screens/mini_screens/splash_screen.dart';
 import 'package:beatabox/model/fav_model.dart';
 import 'package:beatabox/provider/songmodel_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:just_audio_background/just_audio_background.dart';
 import 'package:provider/provider.dart';
-
 import 'database/playlist_db.dart';
 
 Future<void> main() async {
@@ -45,17 +43,36 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ListenableProvider(create:(context) => SongModelProvider(), ),
-        ListenableProvider(create: (context) =>OnBoardingProvider(),),
-        ListenableProvider(create:(context) => HomePageProvider(), ),
-        ListenableProvider(create: (context) => BottomNavProv(),),
-        ListenableProvider(create: (context) => SearchProvider(),),
-         ListenableProvider(create: (context) => FavoriteDb(),),
-         ListenableProvider(create: (context) => NowProvider(),),
-         ListenableProvider(create: (context) => PlaylistDb(),),
-         ListenableProvider(create: (context) => BottomNavController(),),
-         ListenableProvider(create: (context) => LyricsProvider(),)
-
+        ListenableProvider(
+          create: (context) => SongModelProvider(),
+        ),
+        ListenableProvider(
+          create: (context) => OnBoardingProvider(),
+        ),
+        ListenableProvider(
+          create: (context) => HomePageProvider(),
+        ),
+        ListenableProvider(
+          create: (context) => BottomNavProv(),
+        ),
+        ListenableProvider(
+          create: (context) => SearchProvider(),
+        ),
+        ListenableProvider(
+          create: (context) => FavoriteDb(),
+        ),
+        ListenableProvider(
+          create: (context) => NowProvider(),
+        ),
+        ListenableProvider(
+          create: (context) => PlaylistDb(),
+        ),
+        ListenableProvider(
+          create: (context) => BottomNavController(),
+        ),
+        ListenableProvider(
+          create: (context) => LyricsProvider(),
+        )
       ],
       child: MaterialApp(
         title: 'BeatBox Music Player',
@@ -66,7 +83,7 @@ class MyApp extends StatelessWidget {
                       const Color.fromARGB(255, 70, 40, 114)))),
           primarySwatch: Colors.blue,
         ),
-        home:  SplashScreen(),
+        home: SplashScreen(),
         debugShowCheckedModeBanner: false,
       ),
     );

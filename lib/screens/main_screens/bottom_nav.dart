@@ -44,16 +44,7 @@ class BottomNavScreen extends StatelessWidget {
                     GetAllSongController.audioPlayer.currentIndex != null
                         ? Column(
                             children: [
-                              OpenContainer(
-                                  closedColor: Colors.transparent,
-                                  transitionDuration:
-                                      const Duration(milliseconds: 800),
-                                  openBuilder: (context, _) => NowPlayingScreen(
-                                      songModelList:
-                                          GetAllSongController.playingSong!),
-                                  closedBuilder: (context,
-                                          VoidCallback openContainer) =>
-                                      MiniPlayer(openContainer: openContainer)),
+                              MiniPlayer()
                             ],
                           )
                         : const SizedBox(),
