@@ -80,7 +80,7 @@ class MyApp extends StatelessWidget {
           elevatedButtonTheme: ElevatedButtonThemeData(
               style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all<Color>(
-                      const Color.fromARGB(255, 70, 40, 114)))),
+                      Color.fromRGBO(70, 40, 114, 1)))),
           primarySwatch: Colors.blue,
         ),
         home: SplashScreen(),

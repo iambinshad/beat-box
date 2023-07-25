@@ -4,10 +4,7 @@ import 'package:beatabox/model/fav_model.dart';
 import 'package:beatabox/provider/bottom_nav_provider/bottom_nav_provider.dart';
 import 'package:beatabox/provider/lyrics_provider.dart';
 import 'package:beatabox/provider/now_playing_provider/now_playing_pro.dart';
-import 'package:beatabox/provider/onboarding_provider/onboarding.dart';
 import 'package:beatabox/provider/songmodel_provider.dart';
-import 'package:beatabox/screens/mini_screens/tabs/container_1.dart';
-import 'package:beatabox/screens/mini_screens/tabs/container_2.dart';
 import 'package:beatabox/screens/mini_screens/tabs/image_page.dart';
 import 'package:beatabox/screens/mini_screens/tabs/lyrics.dart';
 import 'package:flutter/cupertino.dart';
@@ -21,13 +18,13 @@ import 'package:lottie/lottie.dart';
 import '../../../database/playlist_db.dart';
 import '../../main_screens/favorites/favorite_notifying.dart';
 import '../../main_screens/playlist/playlist_screen.dart';
-import '../art_work_widget.dart';
 
 class NowPlayingScreen extends StatefulWidget {
-  const NowPlayingScreen(
-      {super.key, required this.songModelList, this.count = 0});
+  NowPlayingScreen(
+      {super.key, required this.songModelList, this.count = 0, this.tag});
   final List<SongModel> songModelList;
   final dynamic count;
+  Object? tag;
 
   @override
   State<NowPlayingScreen> createState() => _NowPlayingScreenState();
@@ -60,8 +57,6 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
             index == large ? _lastSong = true : _lastSong = false;
           });
         }
-
-        log('index of last song ${widget.count}');
       }
     });
     super.initState();
@@ -94,8 +89,7 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
   @override
   Widget build(BuildContext context) {
     final playListPro = Provider.of<PlaylistDb>(context);
-    final height = MediaQuery.of(context).size.height;
-    final width = MediaQuery.of(context).size.width;
+
     return Container(
       decoration: const BoxDecoration(
           gradient: LinearGradient(
@@ -107,37 +101,32 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
       child: Scaffold(
           appBar: AppBar(
             centerTitle: true,
-            title:SizedBox(
-                  width: 200,
-                  child: Padding(
-                    padding: EdgeInsets.all(16),
-                    child: CupertinoSlidingSegmentedControl<int>(
-                      children: children,
-                      thumbColor: Colors.white24,
-                      onValueChanged: (value) {
-                        setState(() {
-                          slidingControllerIndex = value!;
-                          _controller.animateToPage(
-                            value,
-                            duration: Duration(milliseconds: 300),
-                            curve: Curves.easeInOut,
-                          );
-                        });
-                      },
-                      groupValue: slidingControllerIndex,
-                    ),
-                  ),
+            title: SizedBox(
+              width: 200,
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: CupertinoSlidingSegmentedControl<int>(
+                  children: children,
+                  thumbColor: Colors.white24,
+                  onValueChanged: (value) {
+                    setState(() {
+                      slidingControllerIndex = value!;
+                      _controller.animateToPage(
+                        value,
+                        duration: const Duration(milliseconds: 300),
+                        curve: Curves.easeInOut,
+                      );
+                    });
+                  },
+                  groupValue: slidingControllerIndex,
                 ),
-            
-            //  const Text(
-            //   "NOW PLAYING",
-            //   style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            // ),
+              ),
+            ),
             elevation: 0.0,
             backgroundColor: Colors.transparent,
             leading: IconButton(
               onPressed: () {
-                Provider.of<BottomNavProv>(context,listen: false).reload();
+                Provider.of<BottomNavProv>(context, listen: false).reload();
                 Navigator.pop(context);
               },
               icon: const Icon(
@@ -150,28 +139,9 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
           body: SafeArea(
             child: Column(
               children: [
-                SizedBox(height: 50,),
-                // SizedBox(
-                //   width: 200,
-                //   child: Padding(
-                //     padding: EdgeInsets.all(16),
-                //     child: CupertinoSlidingSegmentedControl<int>(
-                //       children: children,
-                //       thumbColor: Colors.white24,
-                //       onValueChanged: (value) {
-                //         setState(() {
-                //           slidingControllerIndex = value!;
-                //           // _controller.animateToPage(
-                //           //   value,
-                //           //   duration: Duration(milliseconds: 300),
-                //           //   curve: Curves.easeInOut,
-                //           // );
-                //         });
-                //       },
-                //       groupValue: slidingControllerIndex,
-                //     ),
-                //   ),
-                // ),
+                const SizedBox(
+                  height: 50,
+                ),
                 Expanded(
                   flex: 1,
                   child: SizedBox(
@@ -183,13 +153,27 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
                           controller: _controller,
                           onPageChanged: (value) {
                             setState(() {
-                              slidingControllerIndex=value;
+                              slidingControllerIndex = value;
                             });
-                            context.read<LyricsProvider>().callLyricsApiService(widget.songModelList[currentIndex].artist??"", widget.songModelList[currentIndex].displayNameWOExt);
+                            if (widget.songModelList[currentIndex].artist !=
+                                    "<unknown>" &&
+                                widget.songModelList[currentIndex]
+                                        .displayNameWOExt !=
+                                    null) {
+                              context
+                                  .read<LyricsProvider>()
+                                  .callLyricsApiService(
+                                      widget
+                                          .songModelList[currentIndex].artist!,
+                                      widget.songModelList[currentIndex]
+                                          .displayNameWOExt);
+                            }
                           },
-                          children: const [
-                            NowPlayingImagePage(),
-                            LyricsScreen(),
+                          children: [
+                            NowPlayingImagePage(
+                              tag: widget.tag,
+                            ),
+                            const LyricsScreen(),
                           ],
                         );
                       },
@@ -372,13 +356,11 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
                               : IconButton(
                                   iconSize: 40,
                                   onPressed: () {
-                                  // context.read<LyricsProvider>().callLyricsApiService(widget.songModelList[currentIndex].artist??"", widget.songModelList[currentIndex].displayNameWOExt);
                                     if (GetAllSongController
                                         .audioPlayer.hasPrevious) {
                                       GetAllSongController.audioPlayer
                                           .seekToPrevious();
                                     }
-
                                   },
                                   icon: const Icon(
                                     Icons.skip_previous_outlined,
@@ -435,9 +417,7 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
                                   ))
                               : IconButton(
                                   iconSize: 40,
-                                  onPressed: ()async {
-                                    //  context.watch<LyricsProvider>().changeIsLoading(true);
-                                    // // context.read<LyricsProvider>().callLyricsApiService(widget.songModelList[currentIndex].artist??"", widget.songModelList[currentIndex].displayNameWOExt);
+                                  onPressed: () async {
                                     if (GetAllSongController
                                         .audioPlayer.hasNext) {
                                       GetAllSongController.audioPlayer
@@ -743,14 +723,13 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
   void playSong() {
     GetAllSongController.audioPlayer.play();
     GetAllSongController.audioPlayer.durationStream.listen((d) {
-
-        context.read<NowProvider>().setDuration(d);
-  
+      if (mounted) {
+        Provider.of<NowProvider>(context, listen: false).setDuration(d);
+      }
     });
     GetAllSongController.audioPlayer.positionStream.listen((p) {
-
       if (mounted) {
-        context.read<NowProvider>().setPostion(p);
+        Provider.of<NowProvider>(context, listen: false).setPostion(p);
       }
     });
   }

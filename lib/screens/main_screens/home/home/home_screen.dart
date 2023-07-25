@@ -43,18 +43,18 @@ class _HomeScreenState extends State<HomeScreen> {
 //       .toList();
 //   return musicFiles;
 // }
-  final AudioPlayer _audioPlayer = AudioPlayer();
+  // final AudioPlayer _audioPlayer = AudioPlayer();
 
   List<SongModel> allSongs = [];
 
-  void playSong(String? uri) {
-    try {
-      _audioPlayer.setAudioSource(AudioSource.uri(Uri.parse(uri!)));
-      _audioPlayer.play();
-    } on Exception {
-      log('Error parsing Song');
-    }
-  }
+  // void playSong(String? uri) {
+  //   try {
+  //     _audioPlayer.setAudioSource(AudioSource.uri(Uri.parse(uri!)));
+  //     _audioPlayer.play();
+  //   } on Exception {
+  //     log('Error parsing Song');
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -112,13 +112,13 @@ class _HomeScreenState extends State<HomeScreen> {
               automaticallyImplyLeading: false,
               centerTitle: true,
               title: const Text(
-                        'BEATBOX',
-                        style:  TextStyle(
-                          color:Colors.white,
-                          fontSize: 30,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ), 
+                'BEATBOX',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 30,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
               elevation: 0,
               backgroundColor: Colors.transparent,
             ),
@@ -137,7 +137,6 @@ class _HomeScreenState extends State<HomeScreen> {
                           height: 550,
                           width: double.infinity,
                           child: FutureBuilder<List<SongModel>>(
-                          
                               future: _audioQuery.querySongs(
                                   sortType: null,
                                   orderType: OrderType.ASC_OR_SMALLER,
@@ -182,8 +181,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-
-
   ListView listViewType(AsyncSnapshot<List<SongModel>> items) {
     return ListView.builder(
       itemBuilder: ((context, index) {
@@ -202,14 +199,17 @@ class _HomeScreenState extends State<HomeScreen> {
               child: ListTile(
                 iconColor: Colors.white,
                 selectedColor: Colors.purpleAccent,
-                leading: QueryArtworkWidget(
-                    id: items.data![index].id,
-                    type: ArtworkType.AUDIO,
-                    nullArtworkWidget: const CircleAvatar(
-                        backgroundColor: Colors.transparent,
-                        radius: 27,
-                        backgroundImage: AssetImage(
-                            'assets/home_screen/Premium_Photo___Headphones_on_dark_black_background-removebg-preview.png'))),
+                leading: Hero(
+                  tag: index,
+                  child: QueryArtworkWidget(
+                      id: items.data![index].id,
+                      type: ArtworkType.AUDIO,
+                      nullArtworkWidget: const CircleAvatar(
+                          backgroundColor: Colors.transparent,
+                          radius: 27,
+                          backgroundImage: AssetImage(
+                              'assets/home_screen/Premium_Photo___Headphones_on_dark_black_background-removebg-preview.png'))),
+                ),
                 title: Text(
                   items.data![index].displayNameWOExt,
                   style: const TextStyle(
@@ -233,9 +233,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   GetAllSongController.audioPlayer.setAudioSource(
                       GetAllSongController.createSongList(items.data!),
                       initialIndex: index);
-                  context.read<LyricsProvider>().callLyricsApiService(
-                      items.data![index].artist ?? "",
-                      items.data![index].title);
+                  if (items.data![index].artist !="<unknown>"&&
+                      items.data![index].title != null) {
+                    context.read<LyricsProvider>().callLyricsApiService(
+                        items.data![index].artist!, items.data![index].title);
+                  }
 
                   context
                       .read<SongModelProvider>()
@@ -244,6 +246,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     return NowPlayingScreen(
                       songModelList: items.data!,
                       count: items.data!.length,
+                      tag: index,
                     );
                   }));
                 },
