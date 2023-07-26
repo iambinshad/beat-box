@@ -2,10 +2,13 @@ import 'dart:developer';
 
 import 'package:beatabox/provider/home_page_provider/home_provider.dart';
 import 'package:beatabox/provider/lyrics_provider.dart';
-import 'package:beatabox/screens/main_screens/home/home/view_type/grid_view.dart';
-import 'package:beatabox/screens/main_screens/home/search_screen.dart';
-import 'package:beatabox/screens/mini_screens/tabs/now_playing_screen.dart';
-import 'package:beatabox/screens/mini_screens/tabs/tab.dart';
+import 'package:beatabox/view/main_screens/home/home/view_type/grid_view.dart';
+import 'package:beatabox/view/main_screens/home/search_screen.dart';
+import 'package:beatabox/view/mini_screens/tabs/now_playing_screen.dart';
+// import 'package:beatabox/screens/main_screens/home/home/view_type/grid_view.dart';
+// import 'package:beatabox/screens/main_screens/home/search_screen.dart';
+// import 'package:beatabox/screens/mini_screens/tabs/now_playing_screen.dart';
+// import 'package:beatabox/screens/mini_screens/tabs/tab.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:just_audio/just_audio.dart';

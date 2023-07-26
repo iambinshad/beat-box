@@ -1,4 +1,4 @@
-import 'package:beatabox/screens/main_screens/playlist/playlist_song_scn.dart';
+import 'package:beatabox/view/main_screens/playlist/playlist_song_scn.dart';
 import 'package:flutter/material.dart';
 
 import 'package:hive_flutter/hive_flutter.dart';

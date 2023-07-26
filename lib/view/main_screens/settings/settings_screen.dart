@@ -1,6 +1,6 @@
-import 'package:beatabox/screens/main_screens/settings/privacy_policy.dart';
-import 'package:beatabox/screens/main_screens/settings/terms_and_cod.dart';
-import 'package:beatabox/screens/mini_screens/splash_screen.dart';
+import 'package:beatabox/view/main_screens/settings/privacy_policy.dart';
+import 'package:beatabox/view/main_screens/settings/terms_and_cod.dart';
+import 'package:beatabox/view/mini_screens/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
@@ -73,7 +73,8 @@ class SettingsScreen extends StatelessWidget {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const TermsAndConditionScreen(),
+                            builder: (context) =>
+                                const TermsAndConditionScreen(),
                           ));
                     },
                     child: const ListSettings(
@@ -98,8 +99,8 @@ class SettingsScreen extends StatelessWidget {
                       yourIcon: Icons.share_outlined,
                     ),
                   ),
-                   SizedBox(
-                    height: height/4,
+                  SizedBox(
+                    height: height / 4,
                   ),
                   const Center(
                       child: Text(
@@ -138,14 +139,14 @@ class SettingsScreen extends StatelessWidget {
             ElevatedButton(
                 onPressed: () async {
                   final sharedprifes = await SharedPreferences.getInstance();
-                  await sharedprifes.clear();                  
-                  Provider.of<FavoriteDb>(context,listen: false).clear();
+                  await sharedprifes.clear();
+                  Provider.of<FavoriteDb>(context, listen: false).clear();
                   final playlistDb = Hive.box<FavModel>('playlistDb');
-                 await playlistDb.clear();
+                  await playlistDb.clear();
                   // ignore: use_build_context_synchronously
                   Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
                     builder: (context) {
-                      return  SplashScreen();
+                      return SplashScreen();
                     },
                   ), (route) => false);
                 },

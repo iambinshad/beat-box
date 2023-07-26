@@ -1,5 +1,6 @@
-import 'package:beatabox/screens/mini_screens/tabs/lyrics.dart';
-import 'package:beatabox/screens/mini_screens/tabs/now_playing_screen.dart';
+
+import 'package:beatabox/view/mini_screens/tabs/lyrics.dart';
+import 'package:beatabox/view/mini_screens/tabs/now_playing_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 
@@ -44,17 +45,6 @@ class _NowPlayingTabState extends State<NowPlayingTab>
           ),
           backgroundColor: const Color.fromARGB(255, 61, 43, 128),
           centerTitle: true,
-          // bottom: TabBar(
-          //     indicatorColor: Colors.deepPurple,
-          //     controller: tabController,
-          //     tabs: const [
-          //       Tab(
-          //         text: 'Music',
-          //       ),
-          //       Tab(
-          //         text: 'Lyrics',
-          //       ),
-          //     ]),
         ),
         body: TabBarView(controller: tabController, children: [
           NowPlayingScreen(

@@ -1,5 +1,5 @@
 import 'package:beatabox/provider/home_page_provider/search_provider.dart';
-import 'package:beatabox/screens/mini_screens/tabs/now_playing_screen.dart';
+import 'package:beatabox/view/mini_screens/tabs/now_playing_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:on_audio_query/on_audio_query.dart';

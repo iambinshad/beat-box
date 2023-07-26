@@ -1,5 +1,5 @@
-import 'package:beatabox/screens/mini_screens/tabs/now_playing_screen.dart';
-import 'package:beatabox/screens/mini_screens/tabs/tab.dart';
+
+import 'package:beatabox/view/mini_screens/tabs/now_playing_screen.dart';
 import 'package:flutter/material.dart';
 
 import 'package:on_audio_query/on_audio_query.dart';

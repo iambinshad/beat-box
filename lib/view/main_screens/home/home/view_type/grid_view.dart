@@ -1,7 +1,7 @@
 import 'package:beatabox/controller/get_all_song_controller.dart';
 import 'package:beatabox/provider/lyrics_provider.dart';
-import 'package:beatabox/screens/main_screens/home/home/home_screen.dart';
-import 'package:beatabox/screens/mini_screens/tabs/tab.dart';
+import 'package:beatabox/view/main_screens/home/home/home_screen.dart';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:on_audio_query/on_audio_query.dart';

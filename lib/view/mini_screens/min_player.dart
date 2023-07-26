@@ -1,5 +1,5 @@
 import 'package:beatabox/controller/get_all_song_controller.dart';
-import 'package:beatabox/screens/mini_screens/tabs/now_playing_screen.dart';
+import 'package:beatabox/view/mini_screens/tabs/now_playing_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:text_scroll/text_scroll.dart';
 

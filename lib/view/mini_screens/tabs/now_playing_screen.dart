@@ -1,12 +1,11 @@
-import 'dart:developer';
 import 'package:beatabox/controller/get_all_song_controller.dart';
 import 'package:beatabox/model/fav_model.dart';
 import 'package:beatabox/provider/bottom_nav_provider/bottom_nav_provider.dart';
 import 'package:beatabox/provider/lyrics_provider.dart';
 import 'package:beatabox/provider/now_playing_provider/now_playing_pro.dart';
 import 'package:beatabox/provider/songmodel_provider.dart';
-import 'package:beatabox/screens/mini_screens/tabs/image_page.dart';
-import 'package:beatabox/screens/mini_screens/tabs/lyrics.dart';
+import 'package:beatabox/view/mini_screens/tabs/image_page.dart';
+import 'package:beatabox/view/mini_screens/tabs/lyrics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';

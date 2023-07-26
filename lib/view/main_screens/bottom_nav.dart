@@ -3,9 +3,9 @@ import 'package:beatabox/controller/bottom_nav_controller.dart';
 import 'package:beatabox/controller/get_all_song_controller.dart';
 import 'package:beatabox/database/fav_db.dart';
 import 'package:beatabox/provider/bottom_nav_provider/bottom_nav_provider.dart';
-import 'package:beatabox/screens/main_screens/playlist/playlist_screen.dart';
-import 'package:beatabox/screens/mini_screens/min_player.dart';
-import 'package:beatabox/screens/mini_screens/tabs/now_playing_screen.dart';
+import 'package:beatabox/view/main_screens/playlist/playlist_screen.dart';
+import 'package:beatabox/view/mini_screens/min_player.dart';
+
 import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/src/simple/get_state.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';

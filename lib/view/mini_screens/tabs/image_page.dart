@@ -1,4 +1,4 @@
-import 'package:beatabox/screens/mini_screens/art_work_widget.dart';
+import 'package:beatabox/view/mini_screens/art_work_widget.dart';
 import 'package:flutter/material.dart';
 
 class NowPlayingImagePage extends StatelessWidget {
