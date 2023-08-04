@@ -40,6 +40,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                   onPageChanged: (index) {
                     value.isLastPage(index);
                   },
+                  
                   children: const [
                     IntroPage1(),
                     IntroPage2(),
