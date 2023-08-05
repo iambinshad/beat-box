@@ -13,7 +13,6 @@ class ArtWorkWidget extends StatelessWidget {
         builder: (context, value, child) => tag != null
             ? Hero(
                 tag: tag!,
-                
                 child: QueryArtworkWidget(
                   id: value.id,
                   type: ArtworkType.AUDIO,

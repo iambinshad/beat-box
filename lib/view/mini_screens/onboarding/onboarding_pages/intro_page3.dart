@@ -9,18 +9,15 @@ class IntroPage3 extends StatelessWidget {
         color: Colors.white,
         child: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 130),
-              child: Image.asset(
-                'assets/introPages/intro-img3.png',
-                height: 230,
-              ),
+            Image.asset(
+              'assets/introPages/intro-img3.png',
+              height: 230,
             ),
             const SizedBox(
               height: 50,
             ),
             const Text(
-              'Okey',
+              'Okay',
               style: TextStyle(fontSize: 30, fontWeight: FontWeight.w500),
             ),
             const SizedBox(

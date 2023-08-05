@@ -1,9 +1,9 @@
+import 'package:beatabox/view/mini_screens/onboarding/onboarding_screen_two.dart';
 import 'package:flutter/material.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../main_screens/bottom_nav.dart';
-import 'onboarding/onboarding_screen.dart';
 
 class SplashScreen extends StatelessWidget {
    SplashScreen({super.key});

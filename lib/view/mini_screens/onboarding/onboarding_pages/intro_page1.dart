@@ -12,12 +12,9 @@ class IntroPage1 extends StatelessWidget {
       color: Colors.white,
       child: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.only(top: 130),
-            child: Image.asset(
-              'assets/introPages/intro-img1.png',
-              height: 230,
-            ),
+          Image.asset(
+            'assets/introPages/intro-img1.png',
+            height: 230,
           ),
           const SizedBox(
             height: 50,

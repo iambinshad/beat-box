@@ -11,6 +11,7 @@ import 'package:beatabox/view/mini_screens/tabs/now_playing_screen.dart';
 // import 'package:beatabox/screens/mini_screens/tabs/tab.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -32,32 +33,25 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final OnAudioQuery _audioQuery = OnAudioQuery();
-// Future<List<SongModel>> fetchMusicFiles() async {
-//   OnAudioQuery audioQuery = OnAudioQuery();
+Future<List<SongModel>> fetchMusicFiles() async {
+  OnAudioQuery audioQuery = OnAudioQuery();
 
-//   List<SongModel> songs = await audioQuery.querySongs();
+  List<SongModel> songs = await audioQuery.querySongs();
 
-//   // Filter and return only music files
-//   List<SongModel> musicFiles = songs
-//       .where((song) =>
-//           song.isMusic! &&
-//           song.title.isNotEmpty &&
-//           song.displayName.toLowerCase().endsWith('.mp3'))
-//       .toList();
-//   return musicFiles;
-// }
-  // final AudioPlayer _audioPlayer = AudioPlayer();
+  // Filter and return only music files
+  List<SongModel> musicFiles = songs
+      .where((song) =>
+          song.isMusic! &&
+          song.title.isNotEmpty &&
+          song.displayName.toLowerCase().endsWith('.mp3'))
+      .toList();
+  return musicFiles;
+}
+  final AudioPlayer _audioPlayer = AudioPlayer();
 
   List<SongModel> allSongs = [];
 
-  // void playSong(String? uri) {
-  //   try {
-  //     _audioPlayer.setAudioSource(AudioSource.uri(Uri.parse(uri!)));
-  //     _audioPlayer.play();
-  //   } on Exception {
-  //     log('Error parsing Song');
-  //   }
-  // }
+
 
   @override
   Widget build(BuildContext context) {
@@ -140,10 +134,11 @@ class _HomeScreenState extends State<HomeScreen> {
                           height: 550,
                           width: double.infinity,
                           child: FutureBuilder<List<SongModel>>(
-                              future: _audioQuery.querySongs(
-                                  sortType: null,
-                                  orderType: OrderType.ASC_OR_SMALLER,
-                                  uriType: UriType.EXTERNAL),
+                            future: fetchMusicFiles(),
+                              // future: _audioQuery.querySongs(
+                              //     sortType: null,
+                              //     orderType: OrderType.ASC_OR_SMALLER,
+                              //     uriType: UriType.EXTERNAL),
                               builder: ((context, items) {
                                 if (items.data == null) {
                                   return const Center(
@@ -193,6 +188,7 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Padding(
             padding: const EdgeInsets.all(7.0),
             child: Container(
+           
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(30),
                   border: Border.all(

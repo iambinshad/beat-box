@@ -8,6 +8,7 @@ import 'package:beatabox/provider/now_playing_provider/now_playing_pro.dart';
 import 'package:beatabox/provider/onboarding_provider/onboarding.dart';
 import 'package:beatabox/model/fav_model.dart';
 import 'package:beatabox/provider/songmodel_provider.dart';
+import 'package:beatabox/view/mini_screens/onboarding/onboarding_screen_two.dart';
 import 'package:beatabox/view/mini_screens/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -80,10 +81,10 @@ class MyApp extends StatelessWidget {
           elevatedButtonTheme: ElevatedButtonThemeData(
               style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all<Color>(
-                      Color.fromRGBO(70, 40, 114, 1)))),
+                    const  Color.fromRGBO(70, 40, 114, 1)))),
           primarySwatch: Colors.blue,
         ),
-        home: SplashScreen(),
+        home:  SplashScreen(),
         debugShowCheckedModeBanner: false,
       ),
     );
