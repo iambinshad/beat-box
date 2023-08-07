@@ -1,18 +1,19 @@
+import 'package:beatabox/controller/bottom_nav_controller.dart';
 import 'package:beatabox/database/fav_db.dart';
 import 'package:beatabox/provider/bottom_nav_provider/bottom_nav_provider.dart';
 import 'package:beatabox/provider/home_page_provider/home_provider.dart';
 import 'package:beatabox/provider/home_page_provider/search_provider.dart';
+import 'package:beatabox/provider/lyrics_provider.dart';
 import 'package:beatabox/provider/mini_player_provider/mini_player_prov.dart';
 import 'package:beatabox/provider/now_playing_provider/now_playing_pro.dart';
 import 'package:beatabox/provider/onboarding_provider/onboarding.dart';
-import 'package:beatabox/screens/mini_screens/splash_screen.dart';
 import 'package:beatabox/model/fav_model.dart';
 import 'package:beatabox/provider/songmodel_provider.dart';
+import 'package:beatabox/view/mini_screens/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:just_audio_background/just_audio_background.dart';
 import 'package:provider/provider.dart';
-
 import 'database/playlist_db.dart';
 
 Future<void> main() async {
@@ -51,8 +52,15 @@ class MyApp extends StatelessWidget {
          ListenableProvider(create: (context) => FavoriteDb(),),
          ListenableProvider(create: (context) => NowProvider(),),
          ListenableProvider(create: (context) => PlaylistDb(),),
-         ListenableProvider(create: (context) => MiniPlayerProv(),)
+         ListenableProvider(create: (context) => MiniPlayerProv(),),
 
+
+        ListenableProvider(
+          create: (context) => BottomNavController(),
+        ),
+        ListenableProvider(
+          create: (context) => LyricsProvider(),
+        )
       ],
       child: MaterialApp(
         title: 'BeatBox Music Player',
@@ -60,10 +68,10 @@ class MyApp extends StatelessWidget {
           elevatedButtonTheme: ElevatedButtonThemeData(
               style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all<Color>(
-                      const Color.fromARGB(255, 70, 40, 114)))),
+                    const  Color.fromRGBO(70, 40, 114, 1)))),
           primarySwatch: Colors.blue,
         ),
-        home:  SplashScreen(),
+        home:  const SplashScreen(),
         debugShowCheckedModeBanner: false,
       ),
     );

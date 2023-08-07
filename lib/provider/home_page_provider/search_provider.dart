@@ -1,7 +1,7 @@
+import 'package:beatabox/view/main_screens/home/search_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 
-import '../../screens/main_screens/home/search_screen.dart';
 
 class SearchProvider extends ChangeNotifier {
   List<SongModel> foundSongs = [];
