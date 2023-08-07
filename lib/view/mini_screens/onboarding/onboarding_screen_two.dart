@@ -4,6 +4,7 @@ import 'package:beatabox/view/mini_screens/onboarding/onboarding_pages/intro_pag
 import 'package:beatabox/view/mini_screens/onboarding/onboarding_pages/intro_page2.dart';
 import 'package:beatabox/view/mini_screens/onboarding/onboarding_pages/intro_page3.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 // import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -66,7 +67,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
             Consumer<OnBoardingProvider>(
               builder: (context, value, child) {
                 return SizedBox(
-                  height: double.infinity / 1.7,
+                  height: context.height / 1.7,
                   width: double.infinity,
                   child: Row(
                     children: [
@@ -144,7 +145,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                       )
                     :  SizedBox(
                         height: 65,
-                        width: double.infinity/ 2,
+                        width: context.width/ 2,
                         child: null,
                       ),
                 Provider.of<OnBoardingProvider>(context).onLastPage
