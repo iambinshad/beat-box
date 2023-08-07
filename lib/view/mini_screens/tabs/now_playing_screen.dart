@@ -155,10 +155,7 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
                               slidingControllerIndex = value;
                             });
                             if (widget.songModelList[currentIndex].artist !=
-                                    "<unknown>" &&
-                                widget.songModelList[currentIndex]
-                                        .displayNameWOExt !=
-                                    null) {
+                                    "<unknown>") {
                               context
                                   .read<LyricsProvider>()
                                   .callLyricsApiService(
@@ -291,7 +288,7 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
                                           max: value.duration.inSeconds
                                               .toDouble(),
                                           onChanged: (value) {
-                                            values.ChangeToSeconds(
+                                            values.changeToSeconds(
                                                 value.toInt());
                                           },
                                         ),

@@ -3,7 +3,6 @@ import 'package:beatabox/provider/lyrics_provider.dart';
 import 'package:beatabox/view/main_screens/home/home/home_screen.dart';
 
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:provider/provider.dart';
 
@@ -12,11 +11,11 @@ import '../../../../mini_screens/tabs/now_playing_screen.dart';
 import '../../menu_button.dart';
 
 class GridViewType extends StatelessWidget {
-  const GridViewType({Key? key, required this.allSongs, required this.items})
+   GridViewType({Key? key, required this.allSongs, required this.items})
       : super(key: key);
 
   final List<SongModel> allSongs;
-  final items;
+  dynamic items;
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +30,7 @@ class GridViewType extends StatelessWidget {
           allSongs.addAll(items.data!);
           return GestureDetector(
             onTap: () {
-              // playSong(item.data![index].uri);
+          
               context.read<LyricsProvider>().callLyricsApiService(
                   items.data![index].artist ?? "", items.data![index].title);
 
@@ -71,8 +70,6 @@ class GridViewType extends StatelessWidget {
                   ),
                   footer: Container(
                     decoration: const BoxDecoration(
-                        // border: Border.all(
-                        //   color: Colors.black,
 
                         borderRadius: BorderRadius.only(
                             bottomLeft: Radius.circular(22),
@@ -95,20 +92,11 @@ class GridViewType extends StatelessWidget {
                       ),
                     ),
                   ),
-                  child: QueryArtworkWidget(
-                    errorBuilder: (p0, p1, p2) {
-                      return const CircularProgressIndicator();
-                    },
-                    artworkWidth: 100,
-                    artworkHeight: 100,
-                    artworkFit: BoxFit.fill,
-                    nullArtworkWidget: Image.asset(
+                  child: Image.asset(
                       'assets/home_screen/Premium_Photo___Headphones_on_dark_black_background-removebg-preview.png',
                   
                     ),
-                    id: items.data![index].id,
-                    type: ArtworkType.AUDIO,
-                  ),
+
                 ),
               ),
             ),

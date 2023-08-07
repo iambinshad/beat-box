@@ -5,19 +5,37 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../main_screens/bottom_nav.dart';
 
-class SplashScreen extends StatelessWidget {
-   SplashScreen({super.key});
+class SplashScreen extends StatefulWidget {
+  const SplashScreen({super.key});
+
+  @override
+  State<SplashScreen> createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      _visible = true;
+      setState(() {});
+      await Future.delayed(const Duration(seconds: 3));
+      if (context.mounted) {
+        gotoHome(context);
+      }
+      getDataFromSharedPreference();
+    });
+  }
 
   late SharedPreferences sharedPreferences;
 
   dynamic savedValue;
 
+  bool _visible = false;
+
   @override
   Widget build(BuildContext context) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      gotoHome(context);
-      getDataFromSharedPreference();
-    });
     getDataFromSharedPreference();
     return Container(
       decoration: const BoxDecoration(
@@ -30,26 +48,16 @@ class SplashScreen extends StatelessWidget {
         body: SafeArea(
           child: Center(
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 30),
-                  child: Stack(children: [
-                    const Positioned(
-                        bottom: -7,
-                        left: 33,
-                        child: Text(
-                          'BEATBOX',
-                          style: TextStyle(
-                              fontSize: 35,
-                              color: Colors.white,
-                              fontWeight: FontWeight.w600),
-                        )),
-                    Image.asset(
-                      'assets/splash-img/Premium_Photo___Headphones_on_dark_black_background-removebg-preview.png',
-                      height: 200,
-                    ),
-                  ]),
+                AnimatedOpacity(
+                  opacity: _visible ? 1.0 : 0.0,
+                  duration: const Duration(milliseconds: 500),
+                  child: Image.asset(
+                    'assets/splash-img/Premium_Photo___Headphones_on_dark_black_background-removebg-preview.png',
+                    height: 220,
+                  ),
                 ),
               ],
             ),
@@ -60,18 +68,17 @@ class SplashScreen extends StatelessWidget {
   }
 
   Future<void> gotoHome(context) async {
-    await Future.delayed(const Duration(seconds: 3));
     if (savedValue == null) {
       // ignore: use_build_context_synchronously
       Navigator.pushAndRemoveUntil(context,
           MaterialPageRoute(builder: (context) {
-        return OnBoardingScreen();
+        return const OnBoardingScreen();
       }), (route) => false);
     } else {
       // ignore: use_build_context_synchronously
       Navigator.pushAndRemoveUntil(context,
           MaterialPageRoute(builder: (context) {
-        return  BottomNavScreen();
+        return BottomNavScreen();
       }), (route) => false);
     }
   }

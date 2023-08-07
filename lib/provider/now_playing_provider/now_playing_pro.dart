@@ -15,7 +15,7 @@ class NowProvider extends ChangeNotifier {
     position =value;
     notifyListeners();
   }
-    void ChangeToSeconds(int seconds) {
+    void changeToSeconds(int seconds) {
     Duration duration = Duration(seconds: seconds);
    
     GetAllSongController.audioPlayer.seek(duration);

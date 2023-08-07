@@ -10,17 +10,10 @@ class NowPlayingImagePage extends StatefulWidget {
 }
 
 class _NowPlayingImagePageState extends State<NowPlayingImagePage> {
-  double heiight = 290;
-
-  double wiidth = 290;
 
   @override
   Widget build(BuildContext context) {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      wiidth = 300;
-      heiight = 300;
-      setState(() {});
-    });
+
     final width = MediaQuery.of(context).size.width;
     return Center(
       child: Stack(
@@ -34,14 +27,14 @@ class _NowPlayingImagePageState extends State<NowPlayingImagePage> {
           ),
           Opacity(
             opacity: 0.2,
-            child: AnimatedContainer(
-              duration: Duration(seconds: 1),
+            child: Container(
+              
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(45),
                 color: Colors.grey,
               ),
-              height: heiight,
-              width: wiidth,
+              height: 300,
+              width: 300,
             ),
           )
         ],

@@ -23,12 +23,15 @@ class FavOrPlayMenuButton extends StatelessWidget {
       
       builder: (context, value, child) {
         return PopupMenuButton(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          
           icon: const Icon(
             Icons.more_vert_outlined,
             color: Colors.white,
           ),
           itemBuilder: (context) => [
             PopupMenuItem(
+              
               child: Text(
                   value.isFavor(songFavorite)
                       ? 'Remove from favourites'

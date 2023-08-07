@@ -1,4 +1,3 @@
-import 'package:animations/animations.dart';
 import 'package:beatabox/controller/bottom_nav_controller.dart';
 import 'package:beatabox/controller/get_all_song_controller.dart';
 import 'package:beatabox/database/fav_db.dart';
@@ -7,7 +6,6 @@ import 'package:beatabox/view/main_screens/playlist/playlist_screen.dart';
 import 'package:beatabox/view/mini_screens/min_player.dart';
 
 import 'package:flutter/material.dart';
-import 'package:get/get_state_manager/src/simple/get_state.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:provider/provider.dart';
 
@@ -19,7 +17,7 @@ class BottomNavScreen extends StatelessWidget {
   BottomNavScreen({super.key});
 
   final pages = [
-    HomeScreen(),
+    const HomeScreen(),
     const FavouriteScreen(),
     const PlaylistScreen(),
     const SettingsScreen(),
@@ -27,12 +25,8 @@ class BottomNavScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var bottomProv = Provider.of<BottomNavProv>(context);
     return Scaffold(
       backgroundColor: Colors.transparent,
-      // body: SafeArea(
-      //   child:Consumer<BottomNavProv>(builder: (context, value, child) => pages[value.currentSelectedIndex],)
-      // ),
       body: Consumer3<FavoriteDb, BottomNavProv, BottomNavController>(
         builder: (context, value, value2, value3, child) => Stack(
           children: [
@@ -42,10 +36,8 @@ class BottomNavScreen extends StatelessWidget {
                 child: Column(
                   children: [
                     GetAllSongController.audioPlayer.currentIndex != null
-                        ? Column(
-                            children: [
-                              MiniPlayer()
-                            ],
+                        ? const Column(
+                            children: [MiniPlayer()],
                           )
                         : const SizedBox(),
                   ],
@@ -57,7 +49,6 @@ class BottomNavScreen extends StatelessWidget {
         padding: const EdgeInsets.all(10.0),
         child: Container(
           decoration: BoxDecoration(
-              // border: Border.all(color: Colors.deepPurple, width: 2),
               color: Colors.black,
               borderRadius: BorderRadius.circular(40)),
           child: Consumer<BottomNavProv>(

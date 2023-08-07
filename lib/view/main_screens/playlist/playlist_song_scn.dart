@@ -82,10 +82,10 @@ class PlaylistSongs extends StatelessWidget {
                               color: const Color.fromARGB(255, 111, 111, 193),
                             ),
                             color: Colors.black12),
-                        child: Center(
+                        child: const Center(
                           child: ListTile(
                             leading: Stack(
-                              children: const [
+                              children: [
                                 Positioned(
                                     child: Opacity(
                                   opacity: 0.1,
@@ -104,7 +104,7 @@ class PlaylistSongs extends StatelessWidget {
                                 )
                               ],
                             ),
-                            title: const Text(
+                            title: Text(
                               'Add Songs',
                               style: TextStyle(
                                   color: Colors.white,

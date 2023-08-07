@@ -140,13 +140,15 @@ class SettingsScreen extends StatelessWidget {
                 onPressed: () async {
                   final sharedprifes = await SharedPreferences.getInstance();
                   await sharedprifes.clear();
-                  Provider.of<FavoriteDb>(context, listen: false).clear();
+                  if (context.mounted) {
+                    Provider.of<FavoriteDb>(context, listen: false).clear();
+                  }
                   final playlistDb = Hive.box<FavModel>('playlistDb');
                   await playlistDb.clear();
                   // ignore: use_build_context_synchronously
                   Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
                     builder: (context) {
-                      return SplashScreen();
+                      return const SplashScreen();
                     },
                   ), (route) => false);
                 },

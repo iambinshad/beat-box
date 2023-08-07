@@ -21,7 +21,6 @@ class OnBoardingScreen extends StatefulWidget {
 class _OnBoardingScreenState extends State<OnBoardingScreen> {
     @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     reqeustStoragePermission();
   }
@@ -139,7 +138,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                     fontWeight: FontWeight.w500,
                     fontSize: 17),
                   ),
-                  icon: Icon(Icons.arrow_forward_ios_rounded,color: Colors.white,)
+                  icon: const Icon(Icons.arrow_forward_ios_rounded,color: Colors.white,)
                 );
                         },
                       )

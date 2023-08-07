@@ -14,6 +14,7 @@ class ArtWorkWidget extends StatelessWidget {
             ? Hero(
                 tag: tag!,
                 child: QueryArtworkWidget(
+                  keepOldArtwork: true,
                   id: value.id,
                   type: ArtworkType.AUDIO,
                   artworkHeight: 200,
@@ -29,6 +30,7 @@ class ArtWorkWidget extends StatelessWidget {
                 ),
               )
             : QueryArtworkWidget(
+              keepOldArtwork: true,
                 id: value.id,
                 type: ArtworkType.AUDIO,
                 artworkHeight: 200,

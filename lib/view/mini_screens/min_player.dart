@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:text_scroll/text_scroll.dart';
 
 class MiniPlayer extends StatefulWidget {
-   MiniPlayer({
+   const MiniPlayer({
     Key? key,
    
   }) : super(key: key);
@@ -18,6 +18,7 @@ bool firstSong = false;
 bool isPlaying = false;
 
 class _MiniPlayerState extends State<MiniPlayer> {
+  @override
   void initState() {
     GetAllSongController.audioPlayer.currentIndexStream.listen((index) {
       if (index != null) {
@@ -45,7 +46,7 @@ class _MiniPlayerState extends State<MiniPlayer> {
                 border: Border.all(
                   color:  Colors.black
                 ),
-                gradient:LinearGradient(begin: Alignment.topCenter,end: Alignment.bottomCenter, colors: [
+                gradient:const LinearGradient(begin: Alignment.topCenter,end: Alignment.bottomCenter, colors: [
                   Color.fromARGB(255, 92, 53, 158),Colors.black,Color.fromARGB(255, 92, 53, 158)
                 ])
                

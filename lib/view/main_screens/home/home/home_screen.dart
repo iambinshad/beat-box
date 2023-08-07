@@ -1,57 +1,40 @@
-import 'dart:developer';
-
 import 'package:beatabox/provider/home_page_provider/home_provider.dart';
 import 'package:beatabox/provider/lyrics_provider.dart';
 import 'package:beatabox/view/main_screens/home/home/view_type/grid_view.dart';
 import 'package:beatabox/view/main_screens/home/search_screen.dart';
 import 'package:beatabox/view/mini_screens/tabs/now_playing_screen.dart';
-// import 'package:beatabox/screens/main_screens/home/home/view_type/grid_view.dart';
-// import 'package:beatabox/screens/main_screens/home/search_screen.dart';
-// import 'package:beatabox/screens/mini_screens/tabs/now_playing_screen.dart';
-// import 'package:beatabox/screens/mini_screens/tabs/tab.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:get/get.dart';
-import 'package:just_audio/just_audio.dart';
-import 'package:permission_handler/permission_handler.dart';
-
 import 'package:on_audio_query/on_audio_query.dart';
-
 import 'package:provider/provider.dart';
-
 import '../../../../controller/get_all_song_controller.dart';
 import '../../../../database/fav_db.dart';
 import '../../../../provider/songmodel_provider.dart';
 import '../menu_button.dart';
 
 class HomeScreen extends StatefulWidget {
-  HomeScreen({super.key});
+  const HomeScreen({super.key});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final OnAudioQuery _audioQuery = OnAudioQuery();
-Future<List<SongModel>> fetchMusicFiles() async {
-  OnAudioQuery audioQuery = OnAudioQuery();
+  Future<List<SongModel>> fetchMusicFiles() async {
+    OnAudioQuery audioQuery = OnAudioQuery();
 
-  List<SongModel> songs = await audioQuery.querySongs();
+    List<SongModel> songs = await audioQuery.querySongs();
 
-  // Filter and return only music files
-  List<SongModel> musicFiles = songs
-      .where((song) =>
-          song.isMusic! &&
-          song.title.isNotEmpty &&
-          song.displayName.toLowerCase().endsWith('.mp3'))
-      .toList();
-  return musicFiles;
-}
-  final AudioPlayer _audioPlayer = AudioPlayer();
+    List<SongModel> musicFiles = songs
+        .where((song) =>
+            song.isMusic! &&
+            song.title.isNotEmpty &&
+            song.displayName.toLowerCase().endsWith('.mp3'))
+        .toList();
+    return musicFiles;
+  }
 
   List<SongModel> allSongs = [];
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -134,11 +117,7 @@ Future<List<SongModel>> fetchMusicFiles() async {
                           height: 550,
                           width: double.infinity,
                           child: FutureBuilder<List<SongModel>>(
-                            future: fetchMusicFiles(),
-                              // future: _audioQuery.querySongs(
-                              //     sortType: null,
-                              //     orderType: OrderType.ASC_OR_SMALLER,
-                              //     uriType: UriType.EXTERNAL),
+                              future: fetchMusicFiles(),
                               builder: ((context, items) {
                                 if (items.data == null) {
                                   return const Center(
@@ -159,8 +138,7 @@ Future<List<SongModel>> fetchMusicFiles() async {
                                   Provider.of<FavoriteDb>(context)
                                       .initialize(items.data!);
                                 }
-                                GetAllSongController.songscopy =
-                                    items.data!; //for playlist
+                                GetAllSongController.songscopy = items.data!;
 
                                 return Provider.of<HomePageProvider>(context)
                                         .isGridveiw
@@ -188,7 +166,6 @@ Future<List<SongModel>> fetchMusicFiles() async {
           child: Padding(
             padding: const EdgeInsets.all(7.0),
             child: Container(
-           
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(30),
                   border: Border.all(
@@ -232,8 +209,7 @@ Future<List<SongModel>> fetchMusicFiles() async {
                   GetAllSongController.audioPlayer.setAudioSource(
                       GetAllSongController.createSongList(items.data!),
                       initialIndex: index);
-                  if (items.data![index].artist !="<unknown>"&&
-                      items.data![index].title != null) {
+                  if (items.data![index].artist != "<unknown>") {
                     context.read<LyricsProvider>().callLyricsApiService(
                         items.data![index].artist!, items.data![index].title);
                   }
