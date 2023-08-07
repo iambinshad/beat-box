@@ -142,7 +142,6 @@ class SongListAddPage extends StatelessWidget {
                                                                 item.data![
                                                                     index],
                                                                 context);
-
                                                             playListPro
                                                                 .notifyListeners();
                                                           },

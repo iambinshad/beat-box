@@ -1,4 +1,3 @@
-
 import 'package:beatabox/view/main_screens/playlist/songs_add_scrn.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -126,9 +125,8 @@ class PlaylistSongs extends StatelessWidget {
                                   Hive.box<FavModel>('playlistDb').listenable(),
                               builder: (BuildContext context,
                                   Box<FavModel> music, Widget? child) {
-                                songPlaylist = listPlaylist(music.values
-                                    .toList()[findex]
-                                    .songId);
+                                songPlaylist = listPlaylist(
+                                    music.values.toList()[findex].songId);
                                 return songPlaylist.isEmpty
                                     ? const Center(
                                         child: Text(
